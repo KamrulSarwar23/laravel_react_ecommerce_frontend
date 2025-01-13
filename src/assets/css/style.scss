@@ -99,8 +99,15 @@ header {
                 color: $primary-black;
                 padding: 10px 15px;
             }
+           a{
+            &:hover{
+                color: rgb(17, 138, 141);
+            }
+           }
         }
     }
+    
+
 }
 
 .section-1 {
@@ -122,6 +129,7 @@ header {
 
 
 .product {
+
     .card-img {
         overflow: hidden;
         border-radius: 7px;
@@ -129,7 +137,7 @@ header {
         img {
             border-radius: 7px;
             transition: all 0.3s ease-out;
-            height: 420px;
+            height: 430px;
         }
     }
 
@@ -144,7 +152,12 @@ header {
 
         a {
             font-size: 1.2em;
+
+            &:hover{
+                color: $primary-color;
+            }
         }
+       
 
         .price {
             font-size: 1.2em;
@@ -152,6 +165,14 @@ header {
             span {
                 color: rgba($primary-black, 0.5)
             }
+        }
+    }
+}
+
+.proudctPage{
+    ul{
+        li{
+            margin-bottom: 12px;
         }
     }
 }
@@ -178,4 +199,48 @@ footer {
             margin-bottom: 8px;
         }
     }
+
+    .spotlight {
+        border-top: 1px solid rgba($primary-white, 0.1);
+        border-bottom: 1px solid rgba($primary-white, 0.1);
+    }
+}
+
+@media (min-width: 200px) and (max-width: 768px) {
+
+    .section-1 {
+        .swiper {
+            .swiper-wrapper {
+                .swiper-slide {
+                    height: 420px;
+                }
+            }
+        }
+    }
+
+    .product {
+        .card-img {
+
+            img {
+
+                height: 450px;
+            }
+        }
+    }
+
+}
+
+@media (min-width: 200px) and (max-width: 500px) {
+
+
+    .product {
+        .card-img {
+
+            img {
+
+                height: 270px;
+            }
+        }
+    }
+
 }
