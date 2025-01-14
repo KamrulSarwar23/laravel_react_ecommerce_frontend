@@ -6,6 +6,7 @@ import Proudct3 from '../../assets/images/mens/fivee.jpg'
 import Proudct4 from '../../assets/images/mens/seven.jpg'
 import Proudct5 from '../../assets/images/mens/four.jpg'
 import Proudct6 from '../../assets/images/mens/six.jpg'
+import { Link } from 'react-router-dom'
 
 export const Shop = () => {
   return (
@@ -15,7 +16,7 @@ export const Shop = () => {
         <div className="container">
           <nav aria-label="breadcrumb" className='py-4'>
             <ol className="breadcrumb">
-              <li className="breadcrumb-item"><a href="#">Home</a></li>
+              <li className="breadcrumb-item"><Link to="/">Home</Link></li>
               <li className="breadcrumb-item active" aria-current="page">Shop</li>
             </ol>
           </nav>
@@ -75,101 +76,119 @@ export const Shop = () => {
             </div>
 
             <div className="col-md-9">
-            <div className="row">
-            <div className='col-lg-4 col-md-6 col-6 mb-4'>
-                <div className="product card border-0">
-                  <div className='card-img'>
-                    <img className='w-100' src={Proudct1} alt="" />
-                  </div>
+              <div className="row">
+                <div className='col-lg-4 col-md-6 col-6 mb-4'>
+                  <div className="product card border-0">
+                    <div className='card-img'>
+                      <Link to="/product">
+                        <img className='w-100' src={Proudct1} alt="" />
+                      </Link>
 
-                  <div className="card-body pt-3">
-                    <a href="">Red Check Shirt</a>
-                    <div className='price'>
-                      $50 <span className='text-decoration-line-through'>$80</span>
+                    </div>
+
+                    <div className="card-body pt-3">
+                      <Link to="/product">Red Check Shirt</Link>
+                      <div className='price'>
+                        $50 <span className='text-decoration-line-through'>$80</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='col-lg-4 col-md-6 col-6 mb-4'>
+                  <div className="product card border-0">
+                    <div className='card-img'>
+                      <Link to="/product">
+                        <img className='w-100' src={Proudct2} alt="" />
+                      </Link>
+
+                    </div>
+
+                    <div className="card-body pt-3">
+                      <Link to="/product">Red Check Shirt</Link>
+                      <div className='price'>
+                        $50 <span className='text-decoration-line-through'>$80</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div className='col-lg-4 col-md-6 col-6 mb-4'>
+                  <div className="product card border-0">
+                    <div className='card-img'>
+                      <Link to="/product">
+                        <img className='w-100' src={Proudct3} alt="" />
+                      </Link>
+
+                    </div>
+
+                    <div className="card-body pt-3">
+                      <Link to="/product">Red Check Shirt</Link>
+                      <div className='price'>
+                        $50 <span className='text-decoration-line-through'>$80</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className='col-lg-4 col-md-6 col-6 mb-4'>
-                <div className="product card border-0">
-                  <div className='card-img'>
-                    <img className='w-100' src={Proudct2} alt="" />
-                  </div>
+              <div className="row">
+                <div className='col-lg-4 col-md-6 col-6 mb-4'>
+                  <div className="product card border-0">
+                    <div className='card-img'>
+                      <Link to="/product">
+                        <img className='w-100' src={Proudct4} alt="" />
+                      </Link>
 
-                  <div className="card-body pt-3">
-                    <a href="">Red Check Shirt</a>
-                    <div className='price'>
-                      $50 <span className='text-decoration-line-through'>$80</span>
+                    </div>
+
+                    <div className="card-body pt-3">
+                      <Link to="/product">Red Check Shirt</Link>
+                      <div className='price'>
+                        $50 <span className='text-decoration-line-through'>$80</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='col-lg-4 col-md-6 col-6 mb-4'>
+                  <div className="product card border-0">
+                    <div className='card-img'>
+                      <Link to="/product">
+                        <img className='w-100' src={Proudct5} alt="" />
+                      </Link>
+
+                    </div>
+
+                    <div className="card-body pt-3">
+                      <Link to="/product">Red Check Shirt</Link>
+                      <div className='price'>
+                        $50 <span className='text-decoration-line-through'>$80</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div className='col-lg-4 col-md-6 col-6 mb-4'>
+                  <div className="product card border-0">
+                    <div className='card-img'>
+                      <Link to="/product">
+                        <img className='w-100' src={Proudct6} alt="" />
+                      </Link>
+
+                    </div>
+
+                    <div className="card-body pt-3">
+                      <Link to="/product">Red Check Shirt</Link>
+                      <div className='price'>
+                        $50 <span className='text-decoration-line-through'>$80</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-
-              <div className='col-lg-4 col-md-6 col-6 mb-4'>
-                <div className="product card border-0">
-                  <div className='card-img'>
-                    <img className='w-100' src={Proudct3} alt="" />
-                  </div>
-
-                  <div className="card-body pt-3">
-                    <a href="">Red Check Shirt</a>
-                    <div className='price'>
-                      $50 <span className='text-decoration-line-through'>$80</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-            <div className='col-lg-4 col-md-6 col-6 mb-4'>
-                <div className="product card border-0">
-                  <div className='card-img'>
-                    <img className='w-100' src={Proudct4} alt="" />
-                  </div>
-
-                  <div className="card-body pt-3">
-                    <a href="">Red Check Shirt</a>
-                    <div className='price'>
-                      $50 <span className='text-decoration-line-through'>$80</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className='col-lg-4 col-md-6 col-6 mb-4'>
-                <div className="product card border-0">
-                  <div className='card-img'>
-                    <img className='w-100' src={Proudct5} alt="" />
-                  </div>
-
-                  <div className="card-body pt-3">
-                    <a href="">Red Check Shirt</a>
-                    <div className='price'>
-                      $50 <span className='text-decoration-line-through'>$80</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div className='col-lg-4 col-md-6 col-6 mb-4'>
-                <div className="product card border-0">
-                  <div className='card-img'>
-                    <img className='w-100' src={Proudct6} alt="" />
-                  </div>
-
-                  <div className="card-body pt-3">
-                    <a href="">Red Check Shirt</a>
-                    <div className='price'>
-                      $50 <span className='text-decoration-line-through'>$80</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             </div>
           </div>
 

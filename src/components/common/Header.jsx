@@ -11,7 +11,8 @@ const Header = () => {
         <span className="text-white">Your Fashion Partner</span>
       </div>
 
-      <div className="container">
+      <div className="container py-2">
+        
         <Navbar expand="lg" className="">
           <Link to="/">
             <img src={Logo} width={170} alt="Logo" />
