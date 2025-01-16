@@ -15,12 +15,13 @@ import Tabs from 'react-bootstrap/Tabs';
 import Proudct1 from '../../assets/images/mens/eight.jpg'
 import Proudct2 from '../../assets/images/mens/eleven.jpg'
 import Proudct3 from '../../assets/images/mens/fivee.jpg'
-import Proudct4 from '../../assets/images/mens/seven.jpg'
+
 
 const Product = () => {
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [rating, setRating] = useState(4)
+    
 
     return (
 
