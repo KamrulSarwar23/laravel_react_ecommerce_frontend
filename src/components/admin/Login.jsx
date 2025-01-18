@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Layout from '../common/Layout';
 import { useForm } from 'react-hook-form';
 import { apiUrl } from '../common/Http';
@@ -9,7 +9,9 @@ import { AdminAuthContext } from '../context/AdminAuth';
 const Login = () => {
 
     const navigate = useNavigate();
+    
     const { login } = useContext(AdminAuthContext)
+    const [loading, setLoading] = useState(false);
     const {
         register,
         handleSubmit,
@@ -17,8 +19,8 @@ const Login = () => {
     } = useForm();
 
     const onSubmit = async (data) => {
-
-        const res = await fetch(`${apiUrl}admin/login`, {
+        setLoading(true);
+        const res = await fetch(`${apiUrl}login`, {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
@@ -92,7 +94,24 @@ const Login = () => {
                                     )}
                                 </div>
 
-                                <button className="btn btn-primary mt-3">Submit</button>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary mt-3"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <>
+                                            <span
+                                                className="spinner-border spinner-border-sm"
+                                                role="status"
+                                                aria-hidden="true"
+                                            ></span>{' '}
+                                            Logging in...
+                                        </>
+                                    ) : (
+                                        'Submit'
+                                    )}
+                                </button>
                             </form>
                         </div>
                     </div>

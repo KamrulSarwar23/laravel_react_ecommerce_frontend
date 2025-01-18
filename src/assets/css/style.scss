@@ -40,6 +40,10 @@ a {
     }
 }
 
+.active{
+    background-color: #79e2ea;
+}
+
 .primary-text {
     color: $primary-color ;
 }
@@ -60,8 +64,8 @@ ul {
     max-width: 1440px;
 }
 
-.nav-tabs{
-    .nav-link{
+.nav-tabs {
+    .nav-link {
         color: $primary-black
     }
 }
@@ -69,16 +73,20 @@ ul {
 
 .btn {
 
-    &.btn-size{
+    &.btn-size {
         background-color: rgba($primary-black, 0.03);
         border-color: rgba($primary-black, 0.05);
         padding: 7px 15px;
         margin-right: 8px;
-        &.active{
-            border-color:  rgba($primary-black, 0.20);;
+
+        &.active {
+            border-color: rgba($primary-black, 0.20);
+            ;
         }
-        &:hover{
-            border-color:  rgba($primary-black, 0.20);;
+
+        &:hover {
+            border-color: rgba($primary-black, 0.20);
+            ;
             color: $primary-black;
         }
     }
@@ -119,11 +127,12 @@ header {
                 color: $primary-black;
                 padding: 10px 15px;
             }
-           a{
-            &:hover{
-                color: rgb(17, 138, 141);
+
+            a {
+                &:hover {
+                    color: rgb(17, 138, 141);
+                }
             }
-           }
         }
     }
 
@@ -174,11 +183,11 @@ header {
         a {
             font-size: 1.2em;
 
-            &:hover{
+            &:hover {
                 color: $primary-color;
             }
         }
-       
+
 
         .price {
             font-size: 1.2em;
@@ -190,24 +199,25 @@ header {
     }
 }
 
-.proudctPage{
-    ul{
-        li{
+.proudctPage {
+    ul {
+        li {
             margin-bottom: 12px;
         }
     }
 }
 
-.product-detail{
-    .mySwiper{
-        .swiper-slide{
+.product-detail {
+    .mySwiper {
+        .swiper-slide {
             height: auto !important;
         }
     }
 
-    .price{
+    .price {
         font-weight: bold;
-        span{
+
+        span {
             color: rgba($color: $primary-black, $alpha: 0.5);
         }
     }
@@ -243,8 +253,26 @@ footer {
     }
 }
 
-.loginform{
+.loginform {
     width: 450px;
+}
+
+.sidebar {
+    ul {
+        li {
+            border-bottom: 2px solid rgba($color: #d5d5d5, $alpha: 0.6);
+
+            a {
+                display: block;
+                padding: 10px;
+                color: $primary-black;
+            }
+            &:hover {
+               background-color: $primary-color;
+               color: white;
+            }
+        }
+    }
 }
 
 @media (min-width: 200px) and (max-width: 768px) {
