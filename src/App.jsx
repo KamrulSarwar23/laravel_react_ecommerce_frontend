@@ -14,6 +14,11 @@ import CategoryShow from './components/admin/category/Show'
 import CategoryCreate from './components/admin/category/Create'
 import CategoryUpdate from './components/admin/category/Update'
 
+
+import BrandShow from './components/admin/brand/Show'
+import BrandCreate from './components/admin/brand/Create'
+import BrandUpdate from './components/admin/brand/Update'
+
 function App() {
 
   return (
@@ -50,6 +55,28 @@ function App() {
           <Route path='/categories/edit/:id' element={
             <AdminRequireAuth>
               <CategoryUpdate />
+            </AdminRequireAuth>
+          } />
+
+
+
+
+          <Route path='/brands' element={
+            <AdminRequireAuth>
+              <BrandShow />
+            </AdminRequireAuth>
+          } />
+
+          <Route path='/brands/create' element={
+            <AdminRequireAuth>
+              <BrandCreate />
+            </AdminRequireAuth>
+          } />
+
+
+          <Route path='/brands/edit/:id' element={
+            <AdminRequireAuth>
+              <BrandUpdate />
             </AdminRequireAuth>
           } />
 

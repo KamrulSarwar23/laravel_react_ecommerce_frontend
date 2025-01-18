@@ -15,7 +15,7 @@ const SideBar = () => {
           <ul>
             <li className={isActive("/dashboard") ? "active" : ""}><Link to={'/dashboard'}>Dashboard</Link></li>
             <li className={isActive("/categories") ? "active" : ""}><Link to={'/categories'}>Category</Link></li>
-            <li><a href="">Brands</a></li>
+            <li className={isActive("/brands") ? "active" : ""}><Link to={'/brands'}>Brands</Link></li>
             <li><a href="">Products</a></li>
             <li><a href="">Orders</a></li>
             <li><a href="">Users</a></li>

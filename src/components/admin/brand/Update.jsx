@@ -18,7 +18,7 @@ const Update = () => {
         formState: { errors },
     } = useForm({
         defaultValues: async () => {
-            const res = await fetch(apiUrl + 'categories/' + params.id, {
+            const res = await fetch(apiUrl + 'brands/' + params.id, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const Update = () => {
 
     const onSubmit = async (data) => {
         setIsDisable(true)
-        const res = await fetch(apiUrl + "categories/" + params.id, {
+        const res = await fetch(apiUrl + "brands/" + params.id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -54,7 +54,7 @@ const Update = () => {
         if (result.status == 200) {
             toast.success(result.message);
             setIsDisable(false)
-            navigate("/categories");
+            navigate("/brands");
         } else {
 
             if (result.status == 400) {
@@ -80,7 +80,7 @@ const Update = () => {
                             <div className="card shadow border-0">
                                 <div className="card-body">
                                     <div className="d-flex justify-content-between">
-                                        <h4 className="h5">Edit Category</h4>
+                                        <h4 className="h5">Edit Brand</h4>
                                     </div>
 
                                     <hr />

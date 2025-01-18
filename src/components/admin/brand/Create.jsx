@@ -20,7 +20,7 @@ const Show = () => {
 
     setIsDisable(true)
 
-    const res = await fetch(apiUrl + "categories", {
+    const res = await fetch(apiUrl + "brands", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const Show = () => {
     if (result.status == 200) {
       toast.success(result.message);
       setIsDisable(false)
-      navigate("/categories");
+      navigate("/brands");
     } else {
 
       if (result.status == 400) {
@@ -61,7 +61,7 @@ const Show = () => {
               <div className="card shadow border-0">
                 <div className="card-body">
                   <div className="d-flex justify-content-between">
-                    <h4 className="h5">Create Category</h4>
+                    <h4 className="h5">Create Brand</h4>
                   </div>
 
                   <hr />

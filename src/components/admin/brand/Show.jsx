@@ -8,14 +8,14 @@ import { format } from "date-fns";
 import Loader from '../../common/Loader';
 
 const Show = () => {
-    const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
     const [loader, setLoader] = useState(false);
 
     // Fetch categories from API
-    const fetchCategories = async () => {
+    const fetchBrands = async () => {
         try {
             setLoader(true)
-            const res = await fetch(`${apiUrl}categories`, {
+            const res = await fetch(`${apiUrl}brands`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const Show = () => {
             const result = await res.json();
             if (result.data) {
                 setLoader(false)
-                setCategories(result.data);
+                setBrands(result.data);
             } else {
                 setLoader(false)
                 console.log(result.error)
@@ -38,7 +38,7 @@ const Show = () => {
     };
 
     // Delete category
-    const deleteCategory = async (id) => {
+    const deleteBrand = async (id) => {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -51,7 +51,7 @@ const Show = () => {
             if (result.isConfirmed) {
                 try {
 
-                    const res = await fetch(`${apiUrl}categories/${id}`, {
+                    const res = await fetch(`${apiUrl}brands/${id}`, {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json",
@@ -63,20 +63,20 @@ const Show = () => {
                     const result = await res.json();
 
                     if (result.status === 200) {
-                        setCategories(categories.filter((category) => category.id !== id));
+                        setBrands(brands.filter((brand) => brand.id !== id));
                         Swal.fire("Deleted!", result.message, "success");
                     } else {
                         Swal.fire("Error", result.message, "error");
                     }
                 } catch (error) {
-                    Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
+                    Swal.fire("Error", "Failed to delete the brand. Please try again.", "error");
                 }
             }
         });
     };
 
     useEffect(() => {
-        fetchCategories();
+        fetchBrands();
     }, []);
 
     return (
@@ -93,10 +93,10 @@ const Show = () => {
                                 <div className="card shadow border-0">
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
-                                            <h4 className="h5">Categories</h4>
+                                            <h4 className="h5">Brands</h4>
                                             <Link
                                                 className="btn btn-primary"
-                                                to={"/categories/create"}
+                                                to={"/brands/create"}
                                             >
                                                 Create
                                             </Link>
@@ -106,7 +106,7 @@ const Show = () => {
 
                                         {
                                             loader == true && <Loader />
-                                        }
+                                        } 
                                         <table className="table table-striped">
                                             <thead>
                                                 <tr>
@@ -119,27 +119,27 @@ const Show = () => {
                                             </thead>
 
                                             <tbody>
-                                                {categories && categories.length > 0 ? (
-                                                    categories.map((category, index) => (
-                                                        <tr key={category.id}>
+                                                {brands && brands.length > 0 ? (
+                                                    brands.map((brand, index) => (
+                                                        <tr key={brand.id}>
                                                             <td>{index+1}</td>
-                                                            <td>{category.name}</td>
+                                                            <td>{brand.name}</td>
                                                             <td>
-                                                                {category.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}
+                                                                {brand.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}
                                                             </td>
                                                             <td>
-                                                                {format(new Date(category.created_at), "PPP")}
+                                                                {format(new Date(brand.created_at), "PPP")}
                                                             </td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/categories/edit/${category.id}`}
+                                                                    to={`/brands/edit/${brand.id}`}
                                                                     className="btn btn-sm btn-info me-2"
                                                                 >
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
 
                                                                 <button
-                                                                    onClick={() => deleteCategory(category.id)}
+                                                                    onClick={() => deleteBrand(brand.id)}
                                                                     className="btn btn-sm btn-danger"
                                                                 >
                                                                     <i className="fa-solid fa-trash"></i>
@@ -149,7 +149,7 @@ const Show = () => {
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td className='text-center py-5' colSpan="5">No Categories Available.</td>
+                                                        <td className='text-center py-5' colSpan="5">No Brands Available.</td>
                                                     </tr>
                                                 )}
                                             </tbody>
