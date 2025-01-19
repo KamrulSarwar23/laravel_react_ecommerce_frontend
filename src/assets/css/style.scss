@@ -40,9 +40,7 @@ a {
     }
 }
 
-.active{
-    background-color: #79e2ea;
-}
+
 
 .primary-text {
     color: $primary-color ;
@@ -257,6 +255,8 @@ footer {
     width: 450px;
 }
 
+
+
 .sidebar {
     ul {
         li {
@@ -273,6 +273,11 @@ footer {
             }
         }
     }
+
+    .active{
+        background-color: #79e2ea;
+    }
+    
 }
 
 @media (min-width: 200px) and (max-width: 768px) {

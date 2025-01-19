@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { apiUrl, token } from '../../common/Http';
+import Layout from '../../common/Layout';
 
 
 const Show = () => {
@@ -35,7 +36,7 @@ const Show = () => {
     if (result.status == 200) {
       toast.success(result.message);
       setIsDisable(false)
-      navigate("/categories");
+      navigate("/admin/categories");
     } else {
 
       if (result.status == 400) {
@@ -50,7 +51,8 @@ const Show = () => {
   return (
     <div>
 
-      <main className="my-5">
+     <Layout>
+     <main className="my-5">
         <div className="container">
           <div className="row">
             <div className="col-md-3">
@@ -123,6 +125,7 @@ const Show = () => {
           </div>
         </div>
       </main>
+     </Layout>
 
     </div>
   );

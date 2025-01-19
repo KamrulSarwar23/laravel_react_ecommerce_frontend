@@ -18,6 +18,9 @@ import CategoryUpdate from './components/admin/category/Update'
 import BrandShow from './components/admin/brand/Show'
 import BrandCreate from './components/admin/brand/Create'
 import BrandUpdate from './components/admin/brand/Update'
+import ProductShow from './components/admin/product/Show'
+import ProductCreate from './components/admin/product/Create'
+import ProductUpdate from './components/admin/product/Update'
 
 function App() {
 
@@ -30,29 +33,29 @@ function App() {
           <Route path='/product' element={<Product />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/checkout' element={<Checkout />} />
-          <Route path='/login' element={<Login />} />
+          <Route path='/admin/login' element={<Login />} />
 
 
-          <Route path='/dashboard' element={
+          <Route path='/admin/dashboard' element={
             <AdminRequireAuth>
               <Dashboard />
             </AdminRequireAuth>
           } />
 
-          <Route path='/categories' element={
+          <Route path='/admin/categories' element={
             <AdminRequireAuth>
               <CategoryShow />
             </AdminRequireAuth>
           } />
 
-          <Route path='/categories/create' element={
+          <Route path='/admin/categories/create' element={
             <AdminRequireAuth>
               <CategoryCreate />
             </AdminRequireAuth>
           } />
 
 
-          <Route path='/categories/edit/:id' element={
+          <Route path='/admin/categories/edit/:id' element={
             <AdminRequireAuth>
               <CategoryUpdate />
             </AdminRequireAuth>
@@ -61,26 +64,45 @@ function App() {
 
 
 
-          <Route path='/brands' element={
+          <Route path='/admin/brands' element={
             <AdminRequireAuth>
               <BrandShow />
             </AdminRequireAuth>
           } />
 
-          <Route path='/brands/create' element={
+          <Route path='/admin/brands/create' element={
             <AdminRequireAuth>
               <BrandCreate />
             </AdminRequireAuth>
           } />
 
 
-          <Route path='/brands/edit/:id' element={
+          <Route path='/admin/brands/edit/:id' element={
             <AdminRequireAuth>
               <BrandUpdate />
             </AdminRequireAuth>
           } />
 
 
+
+          <Route path='/admin/products' element={
+            <AdminRequireAuth>
+              <ProductShow />
+            </AdminRequireAuth>
+          } />
+
+          <Route path='/admin/products/create' element={
+            <AdminRequireAuth>
+              <ProductCreate />
+            </AdminRequireAuth>
+          } />
+
+
+          <Route path='/admin/products/edit/:id' element={
+            <AdminRequireAuth>
+              <ProductUpdate />
+            </AdminRequireAuth>
+          } />
 
         </Routes>
 

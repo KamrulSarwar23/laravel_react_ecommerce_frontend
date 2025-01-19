@@ -1,44 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import Layout from '../../common/Layout';
-import { Link } from 'react-router-dom';
 import SideBar from '../../common/SideBar';
-import { apiUrl, token } from '../../common/Http';
-import Swal from "sweetalert2";
-import { format } from "date-fns";
+import { Link } from 'react-router-dom';
 import Loader from '../../common/Loader';
+import { apiUrl, fileUrl, token } from '../../common/Http';
+import Swal from "sweetalert2";
 
 const Show = () => {
-    const [brands, setBrands] = useState([]);
+
+    const [products, setProducts] = useState([]);
     const [loader, setLoader] = useState(false);
 
-    // Fetch categories from API
-    const fetchBrands = async () => {
+    
+
+    const fetchProducts = async () => {
+
         try {
             setLoader(true)
-            const res = await fetch(`${apiUrl}brands`, {
-                method: 'GET',
+            const res = await fetch(`${apiUrl}products`, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                     Authorization: `Bearer ${token()}`,
-                },
+                }
             });
 
             const result = await res.json();
-            if (result.data) {
+            if (result.status == 200) {
                 setLoader(false)
-                setBrands(result.data);
+                setProducts(result.data);
+
             } else {
                 setLoader(false)
                 console.log(result.error)
             }
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
-    // Delete category
-    const deleteBrand = async (id) => {
+        } catch (error) {
+            setLoader(false)
+            console.log(error)
+
+        } finally {
+            setLoader(false);
+        }
+
+
+    }
+
+   const deleteProduct = async (id) => {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -51,7 +60,7 @@ const Show = () => {
             if (result.isConfirmed) {
                 try {
 
-                    const res = await fetch(`${apiUrl}brands/${id}`, {
+                    const res = await fetch(`${apiUrl}products/${id}`, {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json",
@@ -63,21 +72,22 @@ const Show = () => {
                     const result = await res.json();
 
                     if (result.status === 200) {
-                        setBrands(brands.filter((brand) => brand.id !== id));
+                        setProducts(products.filter((product) => product.id !== id));
+                        
                         Swal.fire("Deleted!", result.message, "success");
                     } else {
                         Swal.fire("Error", result.message, "error");
                     }
                 } catch (error) {
-                    Swal.fire("Error", "Failed to delete the brand. Please try again.", "error");
+                    Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
                 }
             }
         });
     };
 
     useEffect(() => {
-        fetchBrands();
-    }, []);
+        fetchProducts();
+    }, [])
 
     return (
         <Layout>
@@ -93,10 +103,10 @@ const Show = () => {
                                 <div className="card shadow border-0">
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
-                                            <h4 className="h5">Brands</h4>
+                                            <h4 className="h5">Products</h4>
                                             <Link
                                                 className="btn btn-primary"
-                                                to={"/admin/brands/create"}
+                                                to={"/admin/products/create"}
                                             >
                                                 Create
                                             </Link>
@@ -106,40 +116,47 @@ const Show = () => {
 
                                         {
                                             loader == true && <Loader />
-                                        } 
+                                        }
                                         <table className="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>Id</th>
-                                                    <th>Name</th>
+                                                    <th>Image</th>
+                                                    <th>Title</th>
+                                                    <th>Price</th>
+                                                    <th>Qty</th>
+                                                    <th>SKU</th>
                                                     <th>Status</th>
-                                                    <th>Created At</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-                                                {brands && brands.length > 0 ? (
-                                                    brands.map((brand, index) => (
-                                                        <tr key={brand.id}>
-                                                            <td>{index+1}</td>
-                                                            <td>{brand.name}</td>
+                                                {products && products.length > 0 ? (
+                                                    products.map((product, index) => (
+                                                        <tr key={product.id}>
+                                                            <td>{index + 1}</td>
                                                             <td>
-                                                                {brand.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}
+                                                            <img width={55} src={product.image_url} alt="" />
                                                             </td>
+                                                            <td>{product.title}</td>
+                                                            <td>{product.price}</td>
+                                                            <td>{product.qty}</td>
+                                                            <td>{product.sku}</td>
                                                             <td>
-                                                                {format(new Date(brand.created_at), "PPP")}
+                                                                {product.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}
                                                             </td>
+
                                                             <td>
                                                                 <Link
-                                                                    to={`/admin/brands/edit/${brand.id}`}
+                                                                    to={`/admin/products/edit/${product.id}`}
                                                                     className="btn btn-sm btn-info me-2"
                                                                 >
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
 
                                                                 <button
-                                                                    onClick={() => deleteBrand(brand.id)}
+                                                                    onClick={() => deleteProduct(product.id)}
                                                                     className="btn btn-sm btn-danger"
                                                                 >
                                                                     <i className="fa-solid fa-trash"></i>
@@ -149,7 +166,7 @@ const Show = () => {
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td className='text-center py-5' colSpan="5">No Brands Available</td>
+                                                        <td className='text-center py-5' colSpan="8">No Products Available</td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -163,6 +180,6 @@ const Show = () => {
             </div>
         </Layout>
     );
-};
+}
 
-export default Show;
+export default Show

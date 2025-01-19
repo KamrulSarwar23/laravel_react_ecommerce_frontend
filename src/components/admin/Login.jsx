@@ -40,7 +40,7 @@ const Login = () => {
                     localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
                     login(adminInfo);
                     toast.success('Login Successfully')
-                    navigate('/dashboard');
+                    navigate('/admin/dashboard');
 
 
                 } else {

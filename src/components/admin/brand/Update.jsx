@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from "react-router-dom";
 import { apiUrl, token } from '../../common/Http';
+import Layout from '../../common/Layout';
 
 
 const Update = () => {
@@ -54,7 +55,7 @@ const Update = () => {
         if (result.status == 200) {
             toast.success(result.message);
             setIsDisable(false)
-            navigate("/brands");
+            navigate("/admin/brands");
         } else {
 
             if (result.status == 400) {
@@ -69,7 +70,8 @@ const Update = () => {
     return (
         <div>
 
-            <main className="my-5">
+           <Layout>
+           <main className="my-5">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-3">
@@ -142,6 +144,7 @@ const Update = () => {
                     </div>
                 </div>
             </main>
+           </Layout>
 
         </div>
     );

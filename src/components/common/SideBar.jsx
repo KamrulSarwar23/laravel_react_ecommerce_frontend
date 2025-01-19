@@ -13,10 +13,11 @@ const SideBar = () => {
       <div className="card shadow sidebar mb-3">
         <div className="card-body">
           <ul>
-            <li className={isActive("/dashboard") ? "active" : ""}><Link to={'/dashboard'}>Dashboard</Link></li>
-            <li className={isActive("/categories") ? "active" : ""}><Link to={'/categories'}>Category</Link></li>
-            <li className={isActive("/brands") ? "active" : ""}><Link to={'/brands'}>Brands</Link></li>
-            <li><a href="">Products</a></li>
+            <li className={isActive("/admin/dashboard") ? "active" : ""}><Link to={'/admin/dashboard'}>Dashboard</Link></li>
+            <li className={isActive("/admin/categories") ? "active" : ""}><Link to={'/admin/categories'}>Category</Link></li>
+            <li className={isActive("/admin/brands") ? "active" : ""}><Link to={'/admin/brands'}>Brands</Link></li>
+            <li className={isActive("/admin/products") ? "active" : ""}><Link to={'/admin/products'}>Products</Link></li>
+       
             <li><a href="">Orders</a></li>
             <li><a href="">Users</a></li>
             <li><a href="">Shipping</a></li>

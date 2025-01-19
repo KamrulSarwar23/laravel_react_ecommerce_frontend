@@ -64,6 +64,7 @@ const Show = () => {
 
                     if (result.status === 200) {
                         setCategories(categories.filter((category) => category.id !== id));
+                        
                         Swal.fire("Deleted!", result.message, "success");
                     } else {
                         Swal.fire("Error", result.message, "error");
@@ -96,7 +97,7 @@ const Show = () => {
                                             <h4 className="h5">Categories</h4>
                                             <Link
                                                 className="btn btn-primary"
-                                                to={"/categories/create"}
+                                                to={"/admin/categories/create"}
                                             >
                                                 Create
                                             </Link>
@@ -132,7 +133,7 @@ const Show = () => {
                                                             </td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/categories/edit/${category.id}`}
+                                                                    to={`/admin/categories/edit/${category.id}`}
                                                                     className="btn btn-sm btn-info me-2"
                                                                 >
                                                                     <i className="fa-solid fa-pen-to-square"></i>
@@ -149,7 +150,7 @@ const Show = () => {
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td className='text-center py-5' colSpan="5">No Categories Available.</td>
+                                                        <td className='text-center py-5' colSpan="5">No Categories Available</td>
                                                     </tr>
                                                 )}
                                             </tbody>
