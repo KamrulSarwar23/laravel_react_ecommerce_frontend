@@ -15,7 +15,7 @@ const Create = () => {
       readonly: false,
       placeholder: "Enter content here...",
     }),
-    []  
+    []
   );
 
   const editor = useRef(null);
@@ -24,13 +24,12 @@ const Create = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-
+  const [gallery, setGallery] = useState([]);
+  const [galleryImages, setGalleryImages] = useState([]);
 
   const {
     register,
     handleSubmit,
-    setError,
-    formErrors,
     formState: { errors },
   } = useForm();
 
@@ -80,9 +79,8 @@ const Create = () => {
 
   }
 
-
   const storeProduct = async (data) => {
-    const newData = { ...data, "description": content };
+    const newData = { ...data, "description": content, "gallery": gallery };
     setIsDisable(true)
 
     const res = await fetch(apiUrl + "products", {
@@ -98,19 +96,71 @@ const Create = () => {
     const result = await res.json();
 
     if (result.status == 200) {
+
+      console.log(result);
       toast.success(result.message);
       setIsDisable(false)
       navigate("/admin/products");
     } else {
 
+      // Object.keys(formErrors).forEach((field) => {
+      //     setError(field, {message: formErrors[field[0]]});
+      // })
+
       if (result.status == 400) {
-        toast.error(result.errors.name[0]);
+        toast.error(result.errors.sku[0]);
         setIsDisable(false);
       }
-
       toast.error(result.errors);
     }
   };
+
+
+  const handleFile = async (e) => {
+    const formData = new FormData();
+    const file = e.target.files[0];
+    formData.append("image", file);
+    setIsDisable(true);
+
+    const res = await fetch(apiUrl + "temp-images", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token()}`,
+      },
+      body: formData
+    }).then(res => res.json())
+      .then(result => {
+
+        gallery.push(result.data.id)
+        setGallery(gallery)
+        galleryImages.push(result.data.image_url)
+        setGalleryImages(galleryImages)
+        toast.success(result.message);
+        setIsDisable(false);
+        e.target.value = ""
+      })
+  }
+
+  const removeImage = (image) => {
+    
+    // Find the index of the image to be removed in galleryImages
+    const imageIndex = galleryImages.indexOf(image);
+  
+    if (imageIndex !== -1) {
+
+      // Remove the image from galleryImages
+      const updatedGalleryImages = [...galleryImages];
+      updatedGalleryImages.splice(imageIndex, 1);
+      setGalleryImages(updatedGalleryImages);
+  
+      // Remove the corresponding ID from gallery
+      const updatedGallery = [...gallery];
+      updatedGallery.splice(imageIndex, 1);
+      setGallery(updatedGallery);
+    }
+  };
+  
 
   useEffect(() => {
     getCategories();
@@ -137,7 +187,7 @@ const Create = () => {
 
                   <form onSubmit={handleSubmit(storeProduct)}>
 
-                  <h3 className="py-3 border-bottom mb-4">Product Details</h3>
+                    <h3 className="py-3 border-bottom mb-4">Product Details</h3>
                     <div className="mb-3">
                       <label htmlFor="title" className="form-label">
                         Title
@@ -202,9 +252,7 @@ const Create = () => {
                           <select
                             className="form-control"
                             id="brand"
-                            {...register("brand", {
-                              required: "The brand field is required",
-                            })}
+                            {...register("brand")}
                           >
                             <option value="">Select Brand</option>
                             {brands && brands.length > 0
@@ -224,7 +272,7 @@ const Create = () => {
 
                       <div className="col-12">
                         <div className="mb-3">
-                          <label htmlFor="title" className="form-label">
+                          <label htmlFor="short_description" className="form-label">
                             Short Descriprion
                           </label>
 
@@ -236,9 +284,9 @@ const Create = () => {
 
                           </textarea>
 
-                          {errors.title && (
+                          {errors.short_description && (
                             <p className="invalid-feedback">
-                              {errors.title.message}
+                              {errors.short_description.message}
                             </p>
                           )}
                         </div>
@@ -246,20 +294,20 @@ const Create = () => {
 
                       <div className="col-12">
                         <div className="mb-3">
-                          <label htmlFor="content" className="form-label">
-                            Content
+                          <label htmlFor="description" className="form-label">
+                            Description
                           </label>
                           <JoditEditor
                             ref={editor}
                             value={content}
                             config={config}
-                        
+
                             onChange={(newContent) => setContent(newContent)}
                           />
                         </div>
                       </div>
                     </div>
-                          <h3 className="py-3 border-bottom mb-4">Pricing</h3>
+                    <h3 className="py-3 border-bottom mb-4">Pricing</h3>
                     <div className="row">
                       <div className="col-md-6">
 
@@ -272,7 +320,7 @@ const Create = () => {
                             {...register("price", {
                               required: "The price field is required",
                             })}
-                            type="text"
+                            type="number"
                             id="title"
                             className={`form-control ${errors.price ? "is-invalid" : ""
                               }`}
@@ -291,13 +339,13 @@ const Create = () => {
 
                         <div className="mb-3">
                           <label htmlFor="compare_price" className="form-label">
-                          Compare Price
+                            Compare Price
                           </label>
                           <input
                             placeholder="Compare Price"
                             {...register("compare_price")}
-                            type="text"
-                            id="title"
+                            type="number"
+                            id="compare_price"
                             className={`form-control ${errors.compare_price ? "is-invalid" : ""
                               }`}
                           />
@@ -318,12 +366,12 @@ const Create = () => {
 
                         <div className="mb-3">
                           <label htmlFor="Quantity" className="form-label">
-                          Quantity
+                            Quantity
                           </label>
                           <input
                             placeholder="Quantity"
                             {...register("qty")}
-                            type="text"
+                            type="number"
                             id="Quantity"
                             className={`form-control ${errors.qty ? "is-invalid" : ""
                               }`}
@@ -342,11 +390,13 @@ const Create = () => {
 
                         <div className="mb-3">
                           <label htmlFor="SKU" className="form-label">
-                          SKU
+                            SKU
                           </label>
                           <input
                             placeholder="SKU"
-                            {...register("sku")}
+                            {...register("sku", {
+                              required: "The sku field is required",
+                            })}
                             type="text"
                             id="SKU"
                             className={`form-control ${errors.sku ? "is-invalid" : ""
@@ -369,7 +419,7 @@ const Create = () => {
 
                         <div className="mb-3">
                           <label htmlFor="barcode" className="form-label">
-                          Barcode
+                            Barcode
                           </label>
                           <input
                             placeholder="Barcode"
@@ -393,20 +443,20 @@ const Create = () => {
 
                         <div className="mb-3">
                           <label htmlFor="is_featured" className="form-label">
-                          Is Featured
+                            Is Featured
                           </label>
-                      <select
-                        {...register("is_featured", {
-                          required: "The is_featured field is required",
-                        })}
-                        id="status"
-                        className={`form-control ${errors.is_featured ? "is-invalid" : ""
-                          }`}
-                      >
-                        <option value="">Select Status</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
+                          <select
+                            {...register("is_featured", {
+                              required: "The is_featured field is required",
+                            })}
+                            id="status"
+                            className={`form-control ${errors.is_featured ? "is-invalid" : ""
+                              }`}
+                          >
+                            <option value="">Select Status</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
 
                           {errors.is_featured && (
                             <p className="invalid-feedback">
@@ -445,14 +495,30 @@ const Create = () => {
                     <h3 className="py-3 border-bottom mb-3">Files</h3>
                     <div className="row mb-3">
                       <div className="col-md-12">
-                      <label htmlFor="image" className="form-label">
-                        Image
-                      </label>
-                        <input className="form-control" type="file"  />
+                        <label htmlFor="image" className="form-label">
+                          Image
+                        </label>
+                        <input onChange={handleFile} className="form-control" type="file" />
                       </div>
                     </div>
 
-  
+                    <div className="py-3">
+                      <div className="row">
+                        {
+                          galleryImages && galleryImages.map(image => {
+                            return (
+                              <div key={image} className="col-md-3 mb-3">
+                                <img className="w-100 mb-2" src={image} alt="" />
+                                <button onClick={() => removeImage(image)} className="w-100 btn btn-danger">Delete</button>
+                              </div>
+                            )
+                          })
+                        }
+
+                      </div>
+                    </div>
+
+
                     <button disabled={isDisable} type="submit" className="btn btn-primary">
                       Submit
                     </button>
