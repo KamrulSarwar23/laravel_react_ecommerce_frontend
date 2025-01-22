@@ -135,7 +135,7 @@ const Show = () => {
                                                 {products && products.length > 0 ? (
                                                     products.map((product, index) => (
                                                         <tr key={product.id}>
-                                                            <td>{index + 1}</td>
+                                                            <td>{product.id}</td>
                                                             <td>
                                                             {
                                                                 product.image_url == "" ?  <img width={55} src={`${fileUrl}img_placeholder.jpg`} alt="" /> :  <img width={55} src={product.image_url} alt="" />

@@ -24,6 +24,7 @@ const Create = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [sizes, setSizes] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [galleryImages, setGalleryImages] = useState([]);
 
@@ -70,6 +71,29 @@ const Create = () => {
 
       const result = await res.json();
       setBrands(result.data);
+
+    } catch (error) {
+
+      console.log(error)
+    }
+
+
+  }
+
+  const getSizes = async () => {
+
+    try {
+      const res = await fetch(`${apiUrl}sizes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token()}`,
+        }
+      });
+
+      const result = await res.json();
+      setSizes(result.data);
 
     } catch (error) {
 
@@ -136,35 +160,38 @@ const Create = () => {
         setGallery(gallery)
         galleryImages.push(result.data.image_url)
         setGalleryImages(galleryImages)
-        toast.success(result.message);
+
         setIsDisable(false);
+
         e.target.value = ""
+        toast.success(result.message);
       })
   }
 
   const removeImage = (image) => {
-    
+
     // Find the index of the image to be removed in galleryImages
     const imageIndex = galleryImages.indexOf(image);
-  
+
     if (imageIndex !== -1) {
 
       // Remove the image from galleryImages
       const updatedGalleryImages = [...galleryImages];
       updatedGalleryImages.splice(imageIndex, 1);
       setGalleryImages(updatedGalleryImages);
-  
+
       // Remove the corresponding ID from gallery
       const updatedGallery = [...gallery];
       updatedGallery.splice(imageIndex, 1);
       setGallery(updatedGallery);
     }
   };
-  
+
 
   useEffect(() => {
     getCategories();
     getBrands();
+    getSizes();
   }, []);
 
   return (
@@ -466,29 +493,72 @@ const Create = () => {
                         </div>
 
                       </div>
+
+
                     </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="status" className="form-label">
-                        Status
-                      </label>
-                      <select
-                        {...register("status", {
-                          required: "The status field is required",
-                        })}
-                        id="status"
-                        className={`form-control ${errors.status ? "is-invalid" : ""
-                          }`}
-                      >
-                        <option value="">Select Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
-                      {errors.status && (
-                        <p className="invalid-feedback">
-                          {errors.status.message}
-                        </p>
-                      )}
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="mb-3">
+                          <label htmlFor="status" className="form-label">
+                            Status
+                          </label>
+                          <select
+                            {...register("status", {
+                              required: "The status field is required",
+                            })}
+                            id="status"
+                            className={`form-control ${errors.status ? "is-invalid" : ""
+                              }`}
+                          >
+                            <option value="">Select Status</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                          </select>
+                          {errors.status && (
+                            <p className="invalid-feedback">
+                              {errors.status.message}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="col-md-6">
+
+                        </div>
+                      </div>
+
+
+
+
+                      <div className="col-md-6">
+                        <div className="mb-3">
+                          <label htmlFor="sizes" className="form-label">
+                            Sizes
+                          </label> <br />
+
+                          {
+                            sizes && sizes.map(size => {
+                              return (
+                           
+                                  <div key={`size-${size.id}`} className="form-check-inline py-1 me-3">
+                                    <input 
+                                    {
+                                      ...register("sizes")
+                                    }
+                                    className="form-check-input me-1" type="checkbox" value={size.id} id={`size-${size.id}`} />
+                                    <label className="form-check-label" htmlFor={`size-${size.id}`}>
+                                      {size.name}
+                                    </label>
+                                  </div>
+                          
+                              )
+                            })
+                          }
+                        </div>
+
+
+                      </div>
+
                     </div>
 
 
@@ -519,7 +589,7 @@ const Create = () => {
                     </div>
 
 
-                    <button disabled={isDisable} type="submit" className="btn btn-primary">
+                    <button type="submit" disabled={isDisable} className="btn btn-primary">
                       Submit
                     </button>
                   </form>
