@@ -1,91 +1,73 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import Proudct1 from '../../assets/images/mens/eight.jpg'
-import Proudct2 from '../../assets/images/mens/eleven.jpg'
-import Proudct3 from '../../assets/images/mens/fivee.jpg'
-import Proudct4 from '../../assets/images/mens/seven.jpg'
 import { Link } from 'react-router-dom'
-
+import { apiUrl } from '../common/Http'
 
 const LatestProduct = () => {
+
+    const [latestProducts, setLatestProduct] = useState([]);
+
+    const getLatestProducts = async () => {
+        const res = await fetch(`${apiUrl}get-latest-products`, {
+            
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        }).then(res => res.json())
+        .then(result => {
+            if (result.status == 200) {
+                setLatestProduct(result.data)
+            }else{
+                console.log('something went wrong')
+            }
+        })
+    }
+
+    useEffect(() => {
+        getLatestProducts();
+    }, [])
+
     return (
         <div className="section-2 py-5">
             <div className="container">
                 <h2>New Arrivals</h2>
                 <div className="row mt-4">
 
-                    <div className='col-lg-3 col-md-4 col-6 mb-4'>
-                        <div className="product card border-0">
-                            <div className='card-img'>
-                                <Link to="/product">
-                                    <img className='w-100' src={Proudct1} alt="" />
-                                </Link>
+                        {
+                            latestProducts && latestProducts.map((latestProduct, index) => {
+                                return (
+                                    <div key={`latest-product${index}`} className='col-lg-3 col-md-4 col-6 mb-4'>
 
-                            </div>
+                                    <div className="product card border-0">
+                                        <div className='card-img'>
+                                            <Link to="/product">
+                                                <img className='w-100' src={latestProduct.image_url} alt="" />
+                                            </Link>
+            
+                                        </div>
+            
+                                        <div className="card-body pt-3">
+                                            <Link to="/product">{latestProduct.title}</Link>
+                                            <div className='price'>
+                                                ${latestProduct.price}
 
-                            <div className="card-body pt-3">
-                                <Link to="/product">Red Check Shirt</Link>
-                                <div className='price'>
-                                    $50 <span className='text-decoration-line-through'>$80</span>
+                                                {
+                                                    latestProduct.compare_price && <span className='ms-2 text-decoration-line-through'> ${latestProduct.compare_price}</span>
+                                                }
+                                                
+                                
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                                )
+                            })
+                        }
+               
 
-                    <div className='col-lg-3 col-md-4 col-6 mb-4'>
-                        <div className="product card border-0">
-                            <div className='card-img'>
-                            <Link to="/product">
-                            <img className='w-100' src={Proudct2} alt="" />
-                                </Link>
-                             
-                            </div>
-
-                            <div className="card-body pt-3">
-                                <Link to="/product">Red Check Shirt</Link>
-                                <div className='price'>
-                                    $50 <span className='text-decoration-line-through'>$80</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className='col-lg-3 col-md-4 col-6 mb-4'>
-                        <div className="product card border-0">
-                            <div className='card-img'>
-                            
-                                <Link to="/product">
-                                <img className='w-100' src={Proudct3} alt="" />
-                                </Link>
-                            </div>
-
-                            <div className="card-body pt-3">
-                                <Link to="/product">Red Check Shirt</Link>
-                                <div className='price'>
-                                    $50 <span className='text-decoration-line-through'>$80</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className='col-lg-3 col-md-4 col-6 mb-4'>
-                        <div className="product card border-0">
-                            <div className='card-img'>
-                               
-
-                                <Link to="/product">
-                                <img className='w-100' src={Proudct4} alt="" />
-                                </Link>
-                            </div>
-
-                            <div className="card-body pt-3">
-                                <Link to="/product">Red Check Shirt</Link>
-                                <div className='price'>
-                                    $50 <span className='text-decoration-line-through'>$80</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                
                 </div>
             </div>
         </div>

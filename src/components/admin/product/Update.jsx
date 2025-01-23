@@ -6,7 +6,7 @@ import { apiUrl, fileUrl, token } from '../../common/Http';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import JoditEditor from "jodit-react";
-
+import Swal from "sweetalert2";
 
 const Update = () => {
 
@@ -207,26 +207,45 @@ const Update = () => {
       })
   }
 
-  const deleteImage = async (image) => {
+  const deleteImage = async (id) => {
 
-    const res = await fetch(`${apiUrl}delete-image-while-update?image_id=${image}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token()}`,
-      }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
 
-    }).then(res => res.json())
-      .then(result => {
-        if (result.status == 200) {
-          setProductImages(productImages.filter((Productimage) => Productimage.id !== image));
-          toast.success(result.message)
-        } else {
-          console.log("Something went wrong");
+          const res = await fetch(`${apiUrl}delete-image-while-update/${id}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token()}`,
+            }
+
+          }).then(res => res.json())
+            .then(result => {
+              if (result.status == 200) {
+                const newProductImages = productImages.filter((Productimage) => Productimage.id !== id)
+                setProductImages(newProductImages);
+                toast.success(result.message)
+                Swal.fire("Deleted!", result.message, "success");
+              } else {
+
+                Swal.fire("Error", result.message, "error");
+              }
+            });
+        } catch (error) {
+          Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
         }
-      });
-
+      }
+    });
   };
 
 
