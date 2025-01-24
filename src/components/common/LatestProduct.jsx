@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { apiUrl } from '../common/Http'
 
 const LatestProduct = () => {
 
     const [latestProducts, setLatestProduct] = useState([]);
+    const params = useParams();
 
     const getLatestProducts = async () => {
-        const res = await fetch(`${apiUrl}get-latest-products`, {
+        const res = await fetch(`${apiUrl}get-latest-products/`, {
             
             method: 'GET',
             headers: {
@@ -42,22 +42,21 @@ const LatestProduct = () => {
 
                                     <div className="product card border-0">
                                         <div className='card-img'>
-                                            <Link to="/product">
+                                            <Link to={`/product/${latestProduct.id}`}>
                                                 <img className='w-100' src={latestProduct.image_url} alt="" />
                                             </Link>
             
                                         </div>
             
                                         <div className="card-body pt-3">
-                                            <Link to="/product">{latestProduct.title}</Link>
+                                            <Link to={`/product/${latestProduct.id}`}>{latestProduct.title}</Link>
                                             <div className='price'>
                                                 ${latestProduct.price}
 
                                                 {
                                                     latestProduct.compare_price && <span className='ms-2 text-decoration-line-through'> ${latestProduct.compare_price}</span>
                                                 }
-                                                
-                                
+                                                                                
                                             </div>
                                         </div>
                                     </div>

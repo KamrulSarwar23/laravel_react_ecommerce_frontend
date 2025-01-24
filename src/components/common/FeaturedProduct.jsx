@@ -40,13 +40,13 @@ const FeaturedProduct = () => {
                                 <div key={`featured-product${index}`} className='col-lg-3 col-md-4 col-6 mb-4'>
                                     <div className="product card border-0">
                                         <div className='card-img'>
-                                            <Link to="/product">
+                                            <Link to={`/product/${featuredProduct.id}`}>
                                                 <img className='w-100' src={featuredProduct.image_url} alt="" />
                                             </Link>
                                         </div>
 
                                         <div className="card-body pt-3">
-                                            <Link to="/product">{featuredProduct.title}</Link>
+                                            <Link to={`/product/${featuredProduct.id}`}>{featuredProduct.title}</Link>
                                             <div className='price'>
                                                 ${featuredProduct.price} 
                                                 
