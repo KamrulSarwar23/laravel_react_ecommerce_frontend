@@ -66,7 +66,9 @@ const Show = () => {
                         setCategories(categories.filter((category) => category.id !== id));
                         
                         Swal.fire("Deleted!", result.message, "success");
-                    } else {
+                    } else if(result.status === 400){
+                        Swal.fire("Error!", result.message, "error");
+                    }else {
                         Swal.fire("Error", result.message, "error");
                     }
                 } catch (error) {

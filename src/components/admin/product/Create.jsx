@@ -539,23 +539,47 @@ const Create = () => {
                           {
                             sizes && sizes.map(size => {
                               return (
-                           
-                                  <div key={`size-${size.id}`} className="form-check-inline py-1 me-3">
-                                    <input 
+
+                                <div key={`size-${size.id}`} className="form-check-inline py-1 me-3">
+                                  <input
                                     {
-                                      ...register("sizes")
+                                    ...register("sizes")
                                     }
                                     className="form-check-input me-1" type="checkbox" value={size.id} id={`size-${size.id}`} />
-                                    <label className="form-check-label" htmlFor={`size-${size.id}`}>
-                                      {size.name}
-                                    </label>
-                                  </div>
-                          
+                                  <label className="form-check-label" htmlFor={`size-${size.id}`}>
+                                    {size.name}
+                                  </label>
+                                </div>
+
                               )
                             })
                           }
                         </div>
 
+
+                      </div>
+
+                      <div className="col-md-12">
+
+                        <div className="mb-3">
+                          <label htmlFor="colors" className="form-label">
+                            Colors
+                          </label>
+                          <input
+                            placeholder="Colors Exp: Red, Blue, Green"
+                            {...register("colors")}
+                            type="text"
+                            id="colors"
+                            className={`form-control ${errors.colors ? "is-invalid" : ""
+                              }`}
+                          />
+
+                          {errors.colors && (
+                            <p className="invalid-feedback">
+                              {errors.colors.message}
+                            </p>
+                          )}
+                        </div>
 
                       </div>
 

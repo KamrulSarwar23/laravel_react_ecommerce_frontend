@@ -21,11 +21,12 @@ const Header = () => {
           <Navbar.Toggle aria-controls="navbarScroll" />
 
           <Navbar.Collapse id="navbarScroll">
-            <Nav className="ms-auto my-2 my-lg-0">
+              <Nav className="ms-auto my-2 my-lg-0">
+              <Link className="nav-link" to="/">Home</Link>
               <Link className="nav-link" to="/shop">Shop</Link>
-              <Link className="nav-link" to="#">Mens</Link>
-              <Link className="nav-link" to="#">Women</Link>
-              <Link className="nav-link" to="#">Kids</Link>
+              <Link className="nav-link" to="/mens/products">Mens</Link>
+              <Link className="nav-link" to="/womens/products">Womens</Link>
+              <Link className="nav-link" to="/kids/products">Kids</Link>
               <div className="nav-right d-flex mt-2">
                 <Link to="#" className="me-3 ms-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16">

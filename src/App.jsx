@@ -21,6 +21,9 @@ import BrandUpdate from './components/admin/brand/Update'
 import ProductShow from './components/admin/product/Show'
 import ProductCreate from './components/admin/product/Create'
 import ProductUpdate from './components/admin/product/Update'
+import MensProduct from './components/common/MensProduct'
+import WomensProduct from './components/common/WomensProduct'
+import KidsProduct from './components/common/KidsProduct'
 
 function App() {
 
@@ -30,9 +33,16 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/shop' element={<Shop />} />
+
+          <Route path='/mens/products' element={<MensProduct />} />
+          <Route path='/womens/products' element={<WomensProduct />} />
+          <Route path='/kids/products' element={<KidsProduct />} />
+
           <Route path='/product/:id' element={<Product />} />
           <Route path='/cart' element={<Cart />} />
+          
           <Route path='/checkout' element={<Checkout />} />
+
           <Route path='/admin/login' element={<Login />} />
 
 

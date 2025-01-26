@@ -31,40 +31,41 @@ const FeaturedProduct = () => {
     return (
         <div className="section-2">
             <div className="container">
+
                 <h2>Featured Arrivals</h2>
+
+                <hr />
+
                 <div className="row mt-4">
 
-                    { 
-                        featuredProducts && featuredProducts.map((featuredProduct, index) => {
-                            return (
-                                <div key={`featured-product${index}`} className='col-lg-3 col-md-4 col-6 mb-4'>
-                                    <div className="product card border-0">
-                                        <div className='card-img'>
-                                            <Link to={`/product/${featuredProduct.id}`}>
-                                                <img className='w-100' src={featuredProduct.image_url} alt="" />
-                                            </Link>
-                                        </div>
-
-                                        <div className="card-body pt-3">
-                                            <Link to={`/product/${featuredProduct.id}`}>{featuredProduct.title}</Link>
-                                            <div className='price'>
-                                                ${featuredProduct.price} 
-                                                
-                                                {
-                                                    featuredProduct.compare_price && <span className='ms-2 text-decoration-line-through'>${featuredProduct.compare_price}</span>
-                                                }
-                                              
-                                            </div>
+                    {featuredProducts && featuredProducts.length > 0 ? (
+                        featuredProducts.map((featuredProduct, index) => (
+                            <div key={`featured-product${index}`} className="col-lg-3 col-md-4 col-6 mb-4">
+                                <div className="product card border-0">
+                                    <div className="card-img">
+                                        <Link to={`/product/${featuredProduct.id}`}>
+                                            <img className="w-100" src={featuredProduct.image_url} alt={featuredProduct.title} />
+                                        </Link>
+                                    </div>
+                                    <div className="card-body pt-3">
+                                        <Link to={`/product/${featuredProduct.id}`}>{featuredProduct.title}</Link>
+                                        <div className="price">
+                                            ${featuredProduct.price}
+                                            {featuredProduct.compare_price && (
+                                                <span className="ms-2 text-decoration-line-through">${featuredProduct.compare_price}</span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-
-                            )
-                        })
-                    }
-
-
+                            </div>
+                        ))
+                    ) : (
+                        <div className="col-12 text-center mb-5">
+                            <h3 className="mt-5">No Products Found</h3>
+                        </div>
+                    )}
                 </div>
+
             </div>
         </div>
     )

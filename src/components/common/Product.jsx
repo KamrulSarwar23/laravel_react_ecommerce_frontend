@@ -11,14 +11,22 @@ import { Rating } from 'react-simple-star-rating'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { apiUrl, fileUrl } from '../common/Http'
-
+import { toast } from 'react-toastify';
 
 const Product = () => {
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [suggestedProducts, setSuggestedProducts] = useState([]);
     const [rating, setRating] = useState(4)
     const params = useParams();
     const [productDetails, setProductDetails] = useState([]);
+    const [colors, setColors] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const [selectedSize, setSelectedSize] = useState(null);
+    const [selectedColor, setSelectedColor] = useState(null);
+    const [quantity, setQuantity] = useState(1);
 
     const getProductDetails = async () => {
         const res = await fetch(`${apiUrl}products-details/${params.id}`, {
@@ -31,20 +39,104 @@ const Product = () => {
             .then(result => {
                 if (result.status == 200) {
                     setProductDetails(result.data)
+
+                    if (result.data.colors) {
+                        const colorArray = result.data.colors.split(",").map((color) => color.trim());
+                        setColors(colorArray);
+
+                    }
+
                 } else {
                     console.log('Something went wrong');
                 }
             })
     }
 
+    const getSuggestedProducts = async () => {
+        const res = await fetch(`${apiUrl}suggested-products/${params.id}`, {
+
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        }).then(res => res.json())
+            .then(result => {
+                if (result.status == 200) {
+                    setSuggestedProducts(result.data)
+                } else {
+                    console.log('something went wrong')
+                }
+            })
+    }
+
+
+    const handleAddToCart = async (productId, quantity, size, color) => {
+        setLoading(true);
+        try {
+            const res = await fetch(`${apiUrl}cart/add`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({ product_id: productId, quantity, size, color }),
+            });
+
+            const result = await res.json();
+
+            if (result.status == 200) {
+                console.log(result);
+                setCart(result.data);
+                toast.success(result.message);
+
+            } else {
+                toast.error(result.errors.color[0]);
+                toast.error(result.errors.size[0]);
+            }
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    const handleDecrease = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+
+    const handleIncrease = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const handleInputChange = (e) => {
+        const value = parseInt(e.target.value, 10);
+        if (value >= 1) {
+            setQuantity(value);
+        } else {
+            setQuantity(1);
+        }
+    };
 
     useEffect(() => {
         getProductDetails();
-    }, [])
+        getSuggestedProducts();
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+
+    }, [params.id]);
 
     return (
 
         <Layout>
+
+
             <div className="container py-5 product-detail">
                 <div className="row">
                     <div className="col-md-12">
@@ -57,9 +149,9 @@ const Product = () => {
                         </nav>
                     </div>
                 </div>
-
                 <div className="row mb-5">
-                    <div className="col-md-5">
+
+                    <div className="col-md-6 mb-3">
                         <div className="row">
                             <div className="col-2">
                                 <Swiper
@@ -82,11 +174,12 @@ const Product = () => {
                                         productDetails.product_images && productDetails.product_images.map((image, index) => {
                                             return (
                                                 <SwiperSlide key={index}>
-                                                    <div className='content'>
+                                                    <div className='content smallImage'>
                                                         <img
                                                             src={image.image_url}
                                                             alt=""
-                                                            height={100}
+
+                                                            height={120}
                                                             className='w-100' />
                                                     </div>
                                                 </SwiperSlide>
@@ -116,10 +209,11 @@ const Product = () => {
                                         productDetails.product_images && productDetails.product_images.map((image, index) => {
                                             return (
                                                 <SwiperSlide key={`product-${index}`} >
-                                                    <div className='content'>
+                                                    <div className='content largeImage'>
                                                         <img
                                                             src={`${fileUrl}uploads/products/large/${image.image}`}
                                                             alt=""
+                                                            height={650}
                                                             className='w-100' />
                                                     </div>
                                                 </SwiperSlide>
@@ -127,16 +221,12 @@ const Product = () => {
                                         })
                                     }
 
-
-
-
-
                                 </Swiper>
                             </div>
                         </div>
                     </div>
 
-                    <div className="col-md-7">
+                    <div className="col-md-6">
                         <h2>{productDetails.title}</h2>
                         <Rating
                             size={25}
@@ -165,8 +255,19 @@ const Product = () => {
                             <div className='sizes pt-2'>
                                 {
                                     productDetails.sizes && productDetails.sizes.map((size, index) => {
+
+                                        const isSelected = selectedSize === size.name; 
                                         return (
-                                            <button key={index} className='btn btn-size'>{size.name}</button>
+                                        
+                                            <button
+                                            key={index}
+                                            onClick={() => setSelectedSize(size.name)}
+                                            className={`btn btn-size px-3 py-1 rounded border ${
+                                              isSelected ? "bg-secondary text-white" : "bg-gray-200 text-black"
+                                            }`}
+                                          >
+                                            {size.name}
+                                          </button>
                                         )
                                     })
                                 }
@@ -175,8 +276,52 @@ const Product = () => {
                             </div>
                         </div>
 
+                        {
+                            colors && colors.length > 0 &&
+
+                            <div className='pt-3 colorList'>
+                                <select value={selectedColor || ""}
+                                    onChange={(e) => setSelectedColor(e.target.value)} className='form-control' name="" id="">
+                                    <option disabled value="">Select Color</option>
+                                    {
+                                        colors && colors.map((color, index) => {
+                                            return (
+                                                <option key={`color-${index}`} value={color}>{color}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </div>
+                        }
+
+
+                        <div className="quantity-container flex items-center gap-2 mt-3">
+                            <button
+                                onClick={handleDecrease}
+                                className="quantity-btn decrease bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md hover:bg-red-600 transition-all"
+                            >
+                                -
+                            </button>
+                            <input
+                                type="number"
+                                id="quantityInput"
+                                value={quantity}
+                                min="1"
+                                disabled
+                                onChange={handleInputChange}
+                                className="w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button
+                                onClick={handleIncrease}
+                                className="quantity-btn increase bg-gray-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-green-600 transition-all"
+                            >
+                                +
+                            </button>
+                        </div>
+
+
                         <div className='add-to-cart my-3'>
-                            <button className='btn btn-primary text-uppercase'>Add To Cart</button>
+                            <button onClick={() => handleAddToCart(productDetails.id, quantity, selectedSize, selectedColor)} className='btn btn-primary text-uppercase'>Add To Cart</button>
                         </div>
 
 
@@ -209,8 +354,48 @@ const Product = () => {
                         </Tabs>
                     </div>
                 </div>
+
             </div>
 
+            <div className="section-2">
+                <div className="container">
+
+                    <h2>Featured Products</h2>
+
+                    <hr />
+
+                    <div className="row mt-4">
+
+                        {suggestedProducts && suggestedProducts.length > 0 ? (
+                            suggestedProducts.map((product, index) => (
+                                <div key={`featured-product${index}`} className="col-lg-3 col-md-4 col-6 mb-4">
+                                    <div className="product card border-0">
+                                        <div className="card-img">
+                                            <Link to={`/product/${product.id}`}>
+                                                <img className="w-100" src={product.image_url} alt={product.title} />
+                                            </Link>
+                                        </div>
+                                        <div className="card-body pt-3">
+                                            <Link to={`/product/${product.id}`}>{product.title}</Link>
+                                            <div className="price">
+                                                ${product.price}
+                                                {product.compare_price && (
+                                                    <span className="ms-2 text-decoration-line-through">${product.compare_price}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-12 text-center mb-5">
+                                <h3 className="mt-5">No Products Found</h3>
+                            </div>
+                        )}
+                    </div>
+
+                </div>
+            </div>
         </Layout>
 
     )

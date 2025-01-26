@@ -65,7 +65,10 @@ const Show = () => {
                     if (result.status === 200) {
                         setBrands(brands.filter((brand) => brand.id !== id));
                         Swal.fire("Deleted!", result.message, "success");
-                    } else {
+                    } else if (result.status === 400) {
+                        Swal.fire("Error!", result.message, "error");
+                    }
+                    else {
                         Swal.fire("Error", result.message, "error");
                     }
                 } catch (error) {
@@ -106,7 +109,7 @@ const Show = () => {
 
                                         {
                                             loader == true && <Loader />
-                                        } 
+                                        }
                                         <table className="table table-striped">
                                             <thead>
                                                 <tr>
@@ -122,7 +125,7 @@ const Show = () => {
                                                 {brands && brands.length > 0 ? (
                                                     brands.map((brand, index) => (
                                                         <tr key={brand.id}>
-                                                            <td>{index+1}</td>
+                                                            <td>{index + 1}</td>
                                                             <td>{brand.name}</td>
                                                             <td>
                                                                 {brand.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}

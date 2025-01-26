@@ -5,12 +5,14 @@ import { apiUrl } from '../common/Http';
 import Loader from './Loader';
 
 export const Shop = () => {
+
   const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [paginator, setPaginator] = useState(null);
 
   const getCategories = async () => {
     try {
@@ -24,6 +26,10 @@ export const Shop = () => {
 
       const result = await res.json();
       setCategories(result.data);
+
+
+
+
     } catch (error) {
       console.log(error);
     }
@@ -46,34 +52,12 @@ export const Shop = () => {
     }
   };
 
-  const getAllProducts = async () => {
-    setLoading(true); // Set loading to true when fetching data
+  const getAllProducts = async (url = `${apiUrl}get-all-products`, categories, brands,) => {
+
+
     try {
-      const res = await fetch(`${apiUrl}get-all-products`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      });
-
-      const result = await res.json();
-      if (result.status === 200) {
-        setLoading(false);
-        setAllProducts(result.data);
-
-      } else {
-        console.log('Something went wrong');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const filterProducts = async (categories, brands) => {
-    setLoading(true); // Set loading to true when filtering data
-    try {
-      const res = await fetch(`${apiUrl}products-filter-by-category-and-brand`, {
+      setLoading(true);
+      const res = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,43 +69,82 @@ export const Shop = () => {
       const result = await res.json();
       if (result.status === 200) {
         setLoading(false);
-        setAllProducts(result.data);
+        setAllProducts(result.data.data);
+
+        setPaginator({
+          links: result.data.links,
+          total: result.data.total,
+          from: result.data.from,
+          to: result.data.to,
+          per_page: result.data.per_page,
+        });
+
       } else {
-        setLoading(false);  
-        setAllProducts([]);
+        setLoading(false);
+        console.log('Something went wrong');
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+
   const handleCategoryChange = (id) => {
     const updatedCategories = selectedCategories.includes(id)
       ? selectedCategories.filter((catId) => catId !== id)
       : [...selectedCategories, id];
     setSelectedCategories(updatedCategories);
-    filterProducts(updatedCategories, selectedBrands);
+    getAllProducts(`${apiUrl}get-all-products`, updatedCategories, selectedBrands);
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
+
 
   const handleBrandChange = (id) => {
     const updatedBrands = selectedBrands.includes(id)
       ? selectedBrands.filter((brandId) => brandId !== id)
       : [...selectedBrands, id];
     setSelectedBrands(updatedBrands);
-    filterProducts(selectedCategories, updatedBrands);
+    getAllProducts(`${apiUrl}get-all-products`, selectedCategories, updatedBrands);
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
+
+
+  const handlePageChange = (url) => {
+    if (url) {
+      getAllProducts(url, selectedCategories, selectedBrands);
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
 
   useEffect(() => {
     getAllProducts();
     getCategories();
     getBrands();
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }, []);
 
   useEffect(() => {
     if (selectedCategories.length === 0 && selectedBrands.length === 0) {
       getAllProducts(); // Fetch all products if no filters are applied
     } else {
-      filterProducts(selectedCategories, selectedBrands); // Filter products based on selected categories and brands
+      getAllProducts(selectedCategories, selectedBrands); // Filter products based on selected categories and brands
     }
   }, [selectedCategories, selectedBrands]);
 
@@ -184,6 +207,7 @@ export const Shop = () => {
             </div>
 
             <div className="col-md-9">
+
               <div className="row">
                 {loading ? ( // Conditionally render loader while fetching data
                   <div className="col-12 text-center">
@@ -218,6 +242,40 @@ export const Shop = () => {
                   </div>
                 )}
               </div>
+
+              {/* Pagination */}
+              {paginator && paginator.total > paginator.per_page && (
+                <div className="d-flex flex-column justify-content-center align-items-center mt-4 mb-4">
+                  <div className="d-flex flex-wrap gap-2">
+                    {paginator.links.map((link, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handlePageChange(link.url)}
+                        disabled={!link.url}
+                        className={[
+                          "btn btn-sm px-4 py-2 rounded-pill transition-all",
+                          !link.url
+                            ? "btn-secondary disabled text-white"
+                            : "btn-outline-primary",
+                          link.active
+                            ? "btn-primary text-white fw-bold"
+                            : "btn-outline-primary text-dark border-primary",
+                        ].join(" ")}
+                      >
+                        <span
+                          dangerouslySetInnerHTML={{ __html: link.label }}
+                          className="text-center"
+                        ></span>
+                      </button>
+                    ))}
+                  </div>
+                  <span className="mt-3 text-muted fw-semibold">
+                    Showing <span className="text-primary fw-bold">{paginator.from}</span> to{" "}
+                    <span className="text-primary fw-bold">{paginator.to}</span> of{" "}
+                    <span className="text-primary fw-bold">{paginator.total}</span> items
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -62,6 +62,7 @@ const Update = () => {
         compare_price: result.data.compare_price,
         qty: result.data.qty,
         sku: result.data.sku,
+        colors: result.data.colors,
         barcode: result.data.barcode,
         is_featured: result.data.is_featured,
         status: result.data.status,
@@ -640,7 +641,29 @@ const Update = () => {
                             ))}
                         </div>
                       </div>
+                      <div className="col-md-12">
 
+                        <div className="mb-3">
+                          <label htmlFor="colors" className="form-label">
+                            Colors
+                          </label>
+                          <input
+                            placeholder="Colors Exp: Red, Blue, Green"
+                            {...register("colors")}
+                            type="text"
+                            id="colors"
+                            className={`form-control ${errors.colors ? "is-invalid" : ""
+                              }`}
+                          />
+
+                          {errors.colors && (
+                            <p className="invalid-feedback">
+                              {errors.colors.message}
+                            </p>
+                          )}
+                        </div>
+
+                      </div>
 
                     </div>
 

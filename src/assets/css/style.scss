@@ -165,7 +165,7 @@ header {
         img {
             border-radius: 7px;
             transition: all 0.3s ease-out;
-            height: 430px;
+            height: 400px;
         }
     }
 
@@ -267,18 +267,100 @@ footer {
                 padding: 10px;
                 color: $primary-black;
             }
+
             &:hover {
-               background-color: $primary-color;
-               color: white;
+                background-color: $primary-color;
+                color: white;
             }
         }
     }
 
-    .active{
+    .active {
         background-color: #79e2ea;
     }
-    
+
 }
+
+.smallImage img {
+    height: 120 !important;
+    border-radius: 5px;
+}
+
+.largeImage img {
+    height: 600px !important;
+    border-radius: 10px;
+}
+
+.colorList {
+    width: 180px;
+}
+
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #a1b917;
+    color: #fff;
+    border: none;
+    z-index: 9999;
+    border-radius: 50%;
+    padding: 8px 15px;
+    cursor: pointer;
+    // display: none; 
+    box-shadow: 0 6px 6px rgba(4, 4, 4, 0.1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.scroll-to-top:hover {
+    background-color: #8ca116;
+}
+
+.scroll-to-top.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scroll-to-top.hide {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+
+.quantity-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-btn {
+    background-color: #4cacbf;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #3e91a1;
+}   
+
+#quantityInput {
+    width: 50px;
+    text-align: center;
+    font-size: 16px;
+    padding: 2px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
 
 @media (min-width: 200px) and (max-width: 768px) {
 
@@ -297,9 +379,18 @@ footer {
 
             img {
 
-                height: 450px;
+                height: 400px;
             }
         }
+    }
+
+    .smallImage img {
+        height: 100px !important;
+    }
+
+    .largeImage img {
+        height: 450px !important;
+        width: 80% !important;
     }
 
 }
@@ -312,9 +403,14 @@ footer {
 
             img {
 
-                height: 270px;
+                height: 260px;
             }
         }
+    }
+
+    .largeImage img {
+        height: 450px !important;
+        width: 100% !important;
     }
 
 }
