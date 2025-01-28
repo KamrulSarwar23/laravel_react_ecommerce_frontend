@@ -1,8 +1,6 @@
 import React from 'react'
 import Layout from '../common/Layout'
-
-import { Link } from 'react-router-dom';
-import SideBar from '../common/SideBar';
+import SideBar from '../Customer/SideBar'
 
 const Dashboard = () => {
 
@@ -14,7 +12,7 @@ const Dashboard = () => {
           <div className="row">
 
             <div className="d-flex justify-content-between mt-3">
-              <h4 className='h4 pb-0 mb-0'>Dashboard</h4>
+              <h4 className='h4 pb-0 mb-0'>Customer Dashboard</h4>
             </div>
             <div className="col-md-3 py-4">
               <SideBar />

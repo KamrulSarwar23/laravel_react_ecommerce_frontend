@@ -8,6 +8,8 @@ import Checkout from './components/common/Checkout'
 import Login from './components/admin/Login'
 import { ToastContainer, toast } from 'react-toastify';
 import Dashboard from './components/admin/Dashboard'
+import CustomerDashboard from './components/customer/Dashboard'
+
 import { AdminRequireAuth } from './components/admin/AdminRequireAuth'
 
 import CategoryShow from './components/admin/category/Show'
@@ -24,6 +26,7 @@ import ProductUpdate from './components/admin/product/Update'
 import MensProduct from './components/common/MensProduct'
 import WomensProduct from './components/common/WomensProduct'
 import KidsProduct from './components/common/KidsProduct'
+import Register from './components/common/Register'
 
 function App() {
 
@@ -43,7 +46,15 @@ function App() {
           
           <Route path='/checkout' element={<Checkout />} />
 
-          <Route path='/admin/login' element={<Login />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+
+
+          <Route path='/customer/dashboard' element={
+            <AdminRequireAuth>
+              <CustomerDashboard />
+            </AdminRequireAuth>
+          } />
 
 
           <Route path='/admin/dashboard' element={

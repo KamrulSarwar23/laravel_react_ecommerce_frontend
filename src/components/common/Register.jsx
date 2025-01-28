@@ -1,16 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Layout from '../common/Layout';
 import { useForm } from 'react-hook-form';
 import { apiUrl } from '../common/Http';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
-import { AdminAuthContext } from '../context/AdminAuth';
 
-const Login = () => {
+const Register = () => {
 
     const navigate = useNavigate();
-    
-    const { login } = useContext(AdminAuthContext)
+
     const [loading, setLoading] = useState(false);
     const {
         register,
@@ -20,7 +18,7 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         setLoading(true);
-        const res = await fetch(`${apiUrl}login`, {
+        const res = await fetch(`${apiUrl}register`, {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
@@ -31,26 +29,18 @@ const Login = () => {
 
                 if (result.status == 200) {
 
-                    const adminInfo = {
-                        token: result.token,
-                        id: result.id,
-                        name: result.name
-                    }
-
-                    if (result.role == 'admin') {
-                        navigate('/admin/dashboard');
-                    }else{
-                        navigate('/customer/dashboard');
-                    }
-
-                    localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
-                    login(adminInfo);
-                    toast.success('Login Successfully')
-                   
-
+                    toast.success('Register Successfully')
+                    navigate('/login');
 
                 } else {
-                    toast.error(result.message)
+
+                    if (result.status == 400) {
+                        setLoading(false);
+                        toast.error(result.errors.password[0])
+                        toast.error(result.errors.name[0])
+                        toast.error(result.errors.email[0])
+                    }
+
                     setLoading(false);
                 }
             })
@@ -63,6 +53,24 @@ const Login = () => {
                     <div className="row justify-content-center">
                         <div className="card p-5 shadow border-0 loginform">
                             <form onSubmit={handleSubmit(onSubmit)}>
+
+                                <div className="mb-4">
+                                    <label htmlFor="name">Name</label>
+                                    <input
+                                        id="name"
+                                        {...register("name", {
+                                            required: "The name field is required",
+                                        })}
+                                        className={`form-control ${errors.name && 'is-invalid'
+                                            }`}
+                                        type="text"
+                                        placeholder="Name"
+                                    />
+                                    {errors.name && (
+                                        <p className="invalid-feedback">{errors.name?.message}</p>
+                                    )}
+                                </div>
+
                                 <div className="mb-4">
                                     <label htmlFor="email">Email</label>
                                     <input
@@ -77,7 +85,7 @@ const Login = () => {
                                         className={`form-control ${errors.email && 'is-invalid'
                                             }`}
                                         type="text"
-                                        placeholder="Enter your email"
+                                        placeholder="Valid Email"
                                     />
                                     {errors.email && (
                                         <p className="invalid-feedback">{errors.email?.message}</p>
@@ -94,16 +102,33 @@ const Login = () => {
                                         className={`form-control ${errors.password && 'is-invalid'
                                             }`}
                                         type="password"
-                                        placeholder="Enter your password"
+                                        placeholder="Password"
                                     />
                                     {errors.password && (
                                         <p className="invalid-feedback">{errors.password?.message}</p>
                                     )}
                                 </div>
 
+                                <div className="mb-3">
+                                    <label htmlFor="password_confirmation">Confirm Password</label>
+                                    <input
+                                        id="password_confirmation"
+                                        {...register("password_confirmation", {
+                                            required: "The password field is required",
+                                        })}
+                                        className={`form-control ${errors.password_confirmation && 'is-invalid'
+                                            }`}
+                                        type="password"
+                                        placeholder="Confirm Password"
+                                    />
+                                    {errors.password_confirmation && (
+                                        <p className="invalid-feedback">{errors.password_confirmation?.message}</p>
+                                    )}
+                                </div>
+
                                 <button
                                     type="submit"
-                                    className="btn btn-primary mt-3"
+                                    className="btn btn-primary mt-2"
                                     disabled={loading}
                                 >
                                     {loading ? (
@@ -116,13 +141,14 @@ const Login = () => {
                                             Logging in...
                                         </>
                                     ) : (
-                                        'Submit'
+                                        'Register'
                                     )}
                                 </button>
 
-                                <div className='mt-3'>
-                                   <span>Dont have an account?  <Link className='text-primary' to="/register">Register</Link></span>
+                                   <div className='mt-3'>
+                                   <span>Already have an account?  <Link className='text-primary' to="/login"> Login</Link></span>
                                    </div>
+                               
                             </form>
                         </div>
                     </div>
@@ -132,4 +158,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;

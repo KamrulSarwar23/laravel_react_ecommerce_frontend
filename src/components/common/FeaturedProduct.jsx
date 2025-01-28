@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react'
 
 import { apiUrl } from '../common/Http'
 import { Link } from 'react-router-dom'
+import Loader from './Loader';
 
 const FeaturedProduct = () => {
 
     const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const getFeaturedProducts = async () => {
+        setLoading(true);
         const res = await fetch(`${apiUrl}get-featured-products`, {
 
             method: 'GET',
@@ -18,8 +21,10 @@ const FeaturedProduct = () => {
         }).then(res => res.json())
             .then(result => {
                 if (result.status == 200) {
+                    setLoading(false);
                     setFeaturedProducts(result.data)
                 } else {
+                    setLoading(false);
                     console.log('something went wrong')
                 }
             })
@@ -36,35 +41,45 @@ const FeaturedProduct = () => {
 
                 <hr />
 
+
                 <div className="row mt-4">
 
-                    {featuredProducts && featuredProducts.length > 0 ? (
-                        featuredProducts.map((featuredProduct, index) => (
-                            <div key={`featured-product${index}`} className="col-lg-3 col-md-4 col-6 mb-4">
-                                <div className="product card border-0">
-                                    <div className="card-img">
-                                        <Link to={`/product/${featuredProduct.id}`}>
-                                            <img className="w-100" src={featuredProduct.image_url} alt={featuredProduct.title} />
-                                        </Link>
-                                    </div>
-                                    <div className="card-body pt-3">
-                                        <Link to={`/product/${featuredProduct.id}`}>{featuredProduct.title}</Link>
-                                        <div className="price">
-                                            ${featuredProduct.price}
-                                            {featuredProduct.compare_price && (
-                                                <span className="ms-2 text-decoration-line-through">${featuredProduct.compare_price}</span>
-                                            )}
+                    {loading ? (
+                        <div className="col-12 text-center">
+                            <Loader />
+                        </div>
+                    ) :
+                    featuredProducts && featuredProducts.map((featuredProduct, index) => {
+                            return (
+                                <div key={`latest-product${index}`} className='col-lg-3 col-md-4 col-6 mb-4'>
+
+                                    <div className="product card border-0">
+                                        <div className='card-img'>
+                                            <Link to={`/product/${featuredProduct.id}`}>
+                                                <img className='w-100' src={featuredProduct.image_url} alt="" />
+                                            </Link>
+
+                                        </div>
+
+                                        <div className="card-body pt-3">
+                                            <Link to={`/product/${featuredProduct.id}`}>{featuredProduct.title}</Link>
+                                            <div className='price'>
+                                                ${featuredProduct.price}
+
+                                                {
+                                                    featuredProduct.compare_price && <span className='ms-2 text-decoration-line-through'> ${featuredProduct.compare_price}</span>
+                                                }
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="col-12 text-center mb-5">
-                            <h3 className="mt-5">No Products Found</h3>
-                        </div>
-                    )}
+                            )
+                        })
+                    }
+
                 </div>
+
 
             </div>
         </div>

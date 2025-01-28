@@ -28,7 +28,7 @@ const Show = () => {
             });
 
             const result = await res.json();
-            console.log(result);
+            
             if (result.status == 200) {
                 setLoader(false)
                 setProducts(result.data.data);
@@ -207,8 +207,7 @@ const Show = () => {
                                                     <th>Title</th>
                                                     <th>Price</th>
                                                     <th>Category</th>
-                                                    <th>Brand</th>
-                                                    
+                                                    <th>Brand</th>                                                  
                                                     <th>Status</th>
                                                     <th>Is Featured</th>
                                                     <th>Action</th>
@@ -226,7 +225,7 @@ const Show = () => {
                                                                 }
 
                                                             </td>
-                                                            <td>{product.title}</td>
+                                                            <td><Link className='text-primary' to={`/product/${product.id}`}>{product.title}</Link> </td>
                                                             <td>${product.price}</td>
 
                                                             <td>{product.category.name}</td>

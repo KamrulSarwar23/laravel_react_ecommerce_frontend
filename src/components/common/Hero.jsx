@@ -15,7 +15,7 @@ const Hero = () => {
     <Swiper
       modules={[Pagination, Navigation, Autoplay]}
       autoplay={{
-        delay: 3000,
+        delay: 5000,
         disableOnInteraction: false,
       }}
       navigation

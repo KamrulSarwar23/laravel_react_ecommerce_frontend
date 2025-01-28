@@ -17,7 +17,7 @@ const Product = () => {
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [suggestedProducts, setSuggestedProducts] = useState([]);
-    const [rating, setRating] = useState(4)
+    const [rating, setRating] = useState(4);
     const params = useParams();
     const [productDetails, setProductDetails] = useState([]);
     const [colors, setColors] = useState([]);
@@ -150,8 +150,8 @@ const Product = () => {
                     </div>
                 </div>
                 <div className="row mb-5">
-
-                    <div className="col-md-6 mb-3">
+                    
+                    <div className="col-md-5 mb-3">
                         <div className="row">
                             <div className="col-2">
                                 <Swiper
@@ -226,15 +226,20 @@ const Product = () => {
                         </div>
                     </div>
 
-                    <div className="col-md-6">
+                    <div className="col-md-7">
                         <h2>{productDetails.title}</h2>
-                        <Rating
-                            size={25}
-                            readonly
-                            initialValue={rating}
-                            className='mb-1'
-                        />
-                        <span className='ps-2'>10 Reviews</span>
+
+                        <div className='d-flex align-items-center'>
+                            <div className='mt-1'>
+                                <Rating
+                                    size={25}
+                                    initialValue={rating}
+                                    readonly
+                                    className='mb-1'
+                                />
+                            </div>
+                            <span className='ps-2'>10 Reviews</span>
+                        </div>
 
                         <div className='price h5 py-3'>
                             ${productDetails.price}
@@ -256,18 +261,17 @@ const Product = () => {
                                 {
                                     productDetails.sizes && productDetails.sizes.map((size, index) => {
 
-                                        const isSelected = selectedSize === size.name; 
+                                        const isSelected = selectedSize === size.name;
                                         return (
-                                        
+
                                             <button
-                                            key={index}
-                                            onClick={() => setSelectedSize(size.name)}
-                                            className={`btn btn-size px-3 py-1 rounded border ${
-                                              isSelected ? "bg-secondary text-white" : "bg-gray-200 text-black"
-                                            }`}
-                                          >
-                                            {size.name}
-                                          </button>
+                                                key={index}
+                                                onClick={() => setSelectedSize(size.name)}
+                                                className={`btn btn-size px-3 py-1 rounded border ${isSelected ? "bg-secondary text-white" : "bg-gray-200 text-black"
+                                                    }`}
+                                            >
+                                                {size.name}
+                                            </button>
                                         )
                                     })
                                 }
