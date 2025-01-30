@@ -1,15 +1,14 @@
 import React, { useContext } from 'react'
-import { AdminAuthContext } from '../context/AdminAuth'
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import { toast } from 'react-toastify';
-import { apiUrl, token } from '../common/Http';
+import { apiUrl, customerToken, token } from '../common/Http';
+import { CustomerAuthContext } from '../context/CustomerAuth';
 
 const SideBar = () => {
   const location = useLocation();
   const isActive = (path) => location.pathname.startsWith(path);
   const navigate = useNavigate();
-  const { logout } = useContext(AdminAuthContext);
+  const { logout } = useContext(CustomerAuthContext);
 
   const logoutAdmin = async () => {
     const res = await fetch(`${apiUrl}customer/logout`, {
@@ -17,13 +16,13 @@ const SideBar = () => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${token()}`,
+        Authorization: `Bearer ${customerToken()}`,
       },
     });
 
     if (res.status == 200) {
       logout()
-      localStorage.removeItem('adminInfo');
+      localStorage.removeItem('customerInfo');
       navigate('/login');
       toast.success('Logout Successfully')
     }
@@ -37,8 +36,7 @@ const SideBar = () => {
           <ul>
             <li className={isActive("/customer/dashboard") ? "active" : ""}><Link to={'/customer/dashboard'}>Dashboard</Link></li>
             <li><a href="">Orders</a></li>
-            <li><a href="">Users</a></li>
-            <li><a href="">Change Password</a></li>
+            <li className={isActive("/customer/profile") ? "active" : ""}><Link to={'/customer/profile'}>Profile</Link></li>
             <li><Link onClick={logoutAdmin} href="#">Logout</Link></li>
           </ul>
         </div>

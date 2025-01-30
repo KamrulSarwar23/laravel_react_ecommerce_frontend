@@ -6,11 +6,15 @@ import Product from './components/common/Product'
 import Cart from './components/common/Cart'
 import Checkout from './components/common/Checkout'
 import Login from './components/admin/Login'
+import CustomerLogin from './components/customer/Login'
+
 import { ToastContainer, toast } from 'react-toastify';
 import Dashboard from './components/admin/Dashboard'
 import CustomerDashboard from './components/customer/Dashboard'
 
 import { AdminRequireAuth } from './components/admin/AdminRequireAuth'
+import { CustomerRequireAuth } from './components/customer/CustomerRequireAuth'
+
 
 import CategoryShow from './components/admin/category/Show'
 import CategoryCreate from './components/admin/category/Create'
@@ -28,6 +32,9 @@ import WomensProduct from './components/common/WomensProduct'
 import KidsProduct from './components/common/KidsProduct'
 import Register from './components/common/Register'
 
+import AdminProfile from './components/admin/Profile'
+import CustomerProfile from './components/Customer/Profile'
+
 function App() {
 
   return (
@@ -43,19 +50,34 @@ function App() {
 
           <Route path='/product/:id' element={<Product />} />
           <Route path='/cart' element={<Cart />} />
-          
+
           <Route path='/checkout' element={<Checkout />} />
 
-          <Route path='/login' element={<Login />} />
+          <Route path='/admin/login' element={<Login />} />
+
+          <Route path='/login' element={<CustomerLogin />} />
+          
           <Route path='/register' element={<Register />} />
 
 
           <Route path='/customer/dashboard' element={
-            <AdminRequireAuth>
+            <CustomerRequireAuth>
               <CustomerDashboard />
-            </AdminRequireAuth>
+            </CustomerRequireAuth>
           } />
 
+          <Route path='/customer/profile' element={
+            <CustomerRequireAuth>
+              <CustomerProfile />
+            </CustomerRequireAuth>
+          } />
+
+
+          <Route path='/admin/profile' element={
+            <AdminRequireAuth>
+              <AdminProfile />
+            </AdminRequireAuth>
+          } />
 
           <Route path='/admin/dashboard' element={
             <AdminRequireAuth>

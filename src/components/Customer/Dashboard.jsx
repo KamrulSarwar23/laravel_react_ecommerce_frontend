@@ -1,8 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../common/Layout'
 import SideBar from '../Customer/SideBar'
+import { apiUrl, customerToken, token } from '../common/Http';
 
 const Dashboard = () => {
+
+  const [user, setUser] = useState([]);
+
+  const fetchUserData = async () => {
+    try {
+        const response = await fetch(`${apiUrl}user`, {
+            method: 'GET',
+            headers: {
+               
+                'Content-Type': 'application/json',
+                  Authorization: `Bearer ${customerToken()}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+
+        const userData = await response.json();
+        setUser(userData)
+
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+    }
+};
+
+useEffect(() => {
+  fetchUserData();
+}, [])
 
   return (
     <div>
@@ -11,6 +42,7 @@ const Dashboard = () => {
         <div className="container">
           <div className="row">
 
+          
             <div className="d-flex justify-content-between mt-3">
               <h4 className='h4 pb-0 mb-0'>Customer Dashboard</h4>
             </div>

@@ -22,7 +22,7 @@ const SideBar = () => {
     if (res.status == 200) {
       logout()
       localStorage.removeItem('adminInfo');
-      navigate('/login');
+      navigate('/admin/login');
        toast.success('Logout Successfully')
     }
     
@@ -41,7 +41,7 @@ const SideBar = () => {
             <li><a href="">Orders</a></li>
             <li><a href="">Users</a></li>
             <li><a href="">Shipping</a></li>
-            <li><a href="">Change Password</a></li>
+            <li className={isActive("/admin/profile") ? "active" : ""}><Link to={'/admin/profile'}>Profile</Link></li>
             <li><Link onClick={logoutAdmin} href="#">Logout</Link></li>
           </ul>
         </div>

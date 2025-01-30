@@ -11,3 +11,13 @@ export const token = () => {
   };
   
 
+
+  export const customerToken = () => {
+    const adminInfo = localStorage.getItem('customerInfo');
+    if (adminInfo) {
+      const data = JSON.parse(adminInfo);
+      return data?.token;
+    }
+    return null; 
+  };
+
