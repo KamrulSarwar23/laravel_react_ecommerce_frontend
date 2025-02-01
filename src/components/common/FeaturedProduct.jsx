@@ -64,10 +64,10 @@ const FeaturedProduct = () => {
                                         <div className="card-body pt-3">
                                             <Link to={`/product/${featuredProduct.id}`}>{featuredProduct.title}</Link>
                                             <div className='price'>
-                                                ${featuredProduct.price}
+                                            <span>৳</span>{featuredProduct.price}
 
                                                 {
-                                                    featuredProduct.compare_price && <span className='ms-2 text-decoration-line-through'> ${featuredProduct.compare_price}</span>
+                                                    featuredProduct.compare_price && <span className='ms-2 text-decoration-line-through'> <span>৳</span>{featuredProduct.compare_price}</span>
                                                 }
 
                                             </div>

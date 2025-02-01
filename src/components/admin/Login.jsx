@@ -9,7 +9,7 @@ import { AdminAuthContext } from '../context/AdminAuth';
 const Login = () => {
 
     const navigate = useNavigate();
-    
+
     const { login } = useContext(AdminAuthContext)
     const [loading, setLoading] = useState(false);
     const {
@@ -39,14 +39,14 @@ const Login = () => {
 
                     if (result.role == 'admin') {
                         navigate('/admin/dashboard');
-                    }else{
+                    } else {
                         navigate('/customer/dashboard');
                     }
 
                     localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
                     login(adminInfo);
                     toast.success('Login Successfully')
-                   
+
 
 
                 } else {
@@ -121,8 +121,8 @@ const Login = () => {
                                 </button>
 
                                 <div className='mt-3'>
-                                   <span>Dont have an account?  <Link className='text-primary' to="/register">Register</Link></span>
-                                   </div>
+                                    <span>Dont have an account?  <Link className='text-primary' to="/register">Register</Link></span>
+                                </div>
                             </form>
                         </div>
                     </div>

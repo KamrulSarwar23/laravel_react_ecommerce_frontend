@@ -13,6 +13,7 @@ export const Shop = () => {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [paginator, setPaginator] = useState(null);
+  
 
   const getCategories = async () => {
     try {
@@ -35,6 +36,7 @@ export const Shop = () => {
     }
   };
 
+
   const getBrands = async () => {
     try {
       const res = await fetch(`${apiUrl}brands-by-products`, {
@@ -52,8 +54,8 @@ export const Shop = () => {
     }
   };
 
-  const getAllProducts = async (url = `${apiUrl}get-all-products`, categories, brands,) => {
 
+  const getAllProducts = async (url = `${apiUrl}get-all-products`, categories = [], brands = []) => {
 
     try {
       setLoading(true);
@@ -66,8 +68,15 @@ export const Shop = () => {
         body: JSON.stringify({ categories, brands }),
       });
 
-      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+    }
+    
+      const text = await res.text();
+      const result = text ? JSON.parse(text) : {};
+
       if (result.status === 200) {
+
         setLoading(false);
         setAllProducts(result.data.data);
 
@@ -140,6 +149,7 @@ export const Shop = () => {
     });
   }, []);
 
+
   useEffect(() => {
     if (selectedCategories.length === 0 && selectedBrands.length === 0) {
       getAllProducts(); // Fetch all products if no filters are applied
@@ -147,6 +157,7 @@ export const Shop = () => {
       getAllProducts(selectedCategories, selectedBrands); // Filter products based on selected categories and brands
     }
   }, [selectedCategories, selectedBrands]);
+
 
   return (
     <div>
@@ -225,10 +236,10 @@ export const Shop = () => {
                         <div className="card-body pt-3">
                           <Link to={`/product/${product.id}`}>{product.title}</Link>
                           <div className="price">
-                            ${product.price}
+                          <span>৳</span>{product.price}
                             {product.compare_price && (
                               <span className="ms-2 text-decoration-line-through">
-                                ${product.compare_price}
+                               <span>৳</span>{product.compare_price}
                               </span>
                             )}
                           </div>

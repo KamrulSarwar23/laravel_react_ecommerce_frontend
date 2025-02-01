@@ -86,7 +86,7 @@ const Checkout = () => {
                                             <div className="">
                                                 <div>Product Name Goes Here</div>
                                                 <div className="d-flex align-items-center">
-                                                    <span>$10</span>
+                                                    <span><span>৳</span>10</span>
                                                     <button className='ms-4 btn btn-size'>L</button>
                                                     <div className='ps-4'>
                                                         x 1
@@ -103,7 +103,7 @@ const Checkout = () => {
                                             <div className="">
                                                 <div>Product Name Goes Here</div>
                                                 <div className="d-flex align-items-center">
-                                                    <span>$10</span>
+                                                    <span><span>৳</span>10</span>
                                                     <button className='ms-4 btn btn-size'>L</button>
                                                     <div className='ps-4'>
                                                         x 1
@@ -119,7 +119,7 @@ const Checkout = () => {
                                             <div className="">
                                                 <div>Product Name Goes Here</div>
                                                 <div className="d-flex align-items-center">
-                                                    <span>$10</span>
+                                                    <span><span>৳</span>10</span>
                                                     <button className='ms-4 btn btn-size'>L</button>
                                                     <div className='ps-4'>
                                                         x 1

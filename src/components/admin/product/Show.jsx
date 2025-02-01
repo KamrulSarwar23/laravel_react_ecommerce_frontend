@@ -226,7 +226,7 @@ const Show = () => {
 
                                                             </td>
                                                             <td><Link className='text-primary' to={`/product/${product.id}`}>{product.title}</Link> </td>
-                                                            <td>${product.price}</td>
+                                                            <td> <span>৳</span>{product.price}</td>
 
                                                             <td>{product.category.name}</td>
 

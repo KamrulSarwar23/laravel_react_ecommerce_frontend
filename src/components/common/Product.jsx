@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Layout from './Layout'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Thumbs, FreeMode, Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -10,10 +10,11 @@ import 'swiper/css/thumbs';
 import { Rating } from 'react-simple-star-rating'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { apiUrl, fileUrl } from '../common/Http'
+import { apiUrl, customerToken, fileUrl } from '../common/Http'
 import { toast } from 'react-toastify';
 
 const Product = () => {
+    const navigate = useNavigate();
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [suggestedProducts, setSuggestedProducts] = useState([]);
@@ -25,7 +26,9 @@ const Product = () => {
     const [loading, setLoading] = useState(false);
 
     const [selectedSize, setSelectedSize] = useState(null);
+
     const [selectedColor, setSelectedColor] = useState(null);
+
     const [quantity, setQuantity] = useState(1);
 
     const getProductDetails = async () => {
@@ -72,6 +75,7 @@ const Product = () => {
 
 
     const handleAddToCart = async (productId, quantity, size, color) => {
+
         setLoading(true);
         try {
             const res = await fetch(`${apiUrl}cart/add`, {
@@ -79,23 +83,42 @@ const Product = () => {
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
+                    Authorization: `Bearer ${customerToken()}`,
                 },
                 body: JSON.stringify({ product_id: productId, quantity, size, color }),
             });
 
             const result = await res.json();
 
-            if (result.status == 200) {
-                console.log(result);
+            if (result.status === 200) {
                 setCart(result.data);
                 toast.success(result.message);
+                navigate('/cart')
+                // Reset form
+                setSelectedSize("");
+                setSelectedColor("");
+                setQuantity(1);
 
-            } else {
-                toast.error(result.errors.color[0]);
-                toast.error(result.errors.size[0]);
+            } else if (result.status === 400 && result.errors) {
+                if (result.errors.size) {
+                    toast.error(result.errors.size[0]);
+                }
+                if (result.errors.color) {
+                    toast.error(result.errors.color[0]);
+                }
+            } else if (result.status === 401) {
+                toast.error(result.message);
+            } else if (result.status === 402) {
+                toast.error(result.message);
             }
-        } catch (err) {
-            console.error('Error adding to cart:', err);
+            else {
+                navigate('/login')
+                toast.error("Login First");
+
+            }
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            toast.error("Something went wrong. Please try again later.");
         } finally {
             setLoading(false);
         }
@@ -150,7 +173,7 @@ const Product = () => {
                     </div>
                 </div>
                 <div className="row mb-5">
-                    
+
                     <div className="col-md-5 mb-3">
                         <div className="row">
                             <div className="col-2">
@@ -165,6 +188,7 @@ const Product = () => {
                                     spaceBetween={10}
                                     slidesPerView={6}
                                     freeMode={true}
+
                                     watchSlidesProgress={true}
                                     modules={[FreeMode, Navigation, Thumbs]}
                                     className="mySwiper mt-2"
@@ -242,10 +266,10 @@ const Product = () => {
                         </div>
 
                         <div className='price h5 py-3'>
-                            ${productDetails.price}
+                            <span>৳</span>{productDetails.price}
 
                             {
-                                productDetails.compare_price && <span className='ms-2 text-decoration-line-through'> ${productDetails.compare_price}</span>
+                                productDetails.compare_price && <span className='ms-2 text-decoration-line-through'> <span>৳</span>{productDetails.compare_price}</span>
                             }
 
                         </div>
@@ -267,7 +291,7 @@ const Product = () => {
                                             <button
                                                 key={index}
                                                 onClick={() => setSelectedSize(size.name)}
-                                                className={`btn btn-size px-3 py-1 rounded border ${isSelected ? "bg-secondary text-white" : "bg-gray-200 text-black"
+                                                className={`btn btn-size px-3 py-1 rounded border  ${isSelected ? "bg-secondary text-white" : "bg-gray-200 text-black"
                                                     }`}
                                             >
                                                 {size.name}

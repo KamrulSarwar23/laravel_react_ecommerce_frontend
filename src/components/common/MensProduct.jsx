@@ -63,10 +63,10 @@ const MensProducts = () => {
                                         <div className="card-body pt-3">
                                             <Link to={`/product/${product.id}`}>{product.title}</Link>
                                             <div className='price'>
-                                                ${product.price}
+                                            <span>৳</span>{product.price}
 
                                                 {
-                                                    product.compare_price && <span className='ms-2 text-decoration-line-through'> ${product.compare_price}</span>
+                                                    product.compare_price && <span className='ms-2 text-decoration-line-through'> <span>৳</span>{product.compare_price}</span>
                                                 }
 
                                             </div>
