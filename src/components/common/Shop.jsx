@@ -28,9 +28,6 @@ export const Shop = () => {
       const result = await res.json();
       setCategories(result.data);
 
-
-
-
     } catch (error) {
       console.log(error);
     }
@@ -93,6 +90,7 @@ export const Shop = () => {
         console.log('Something went wrong');
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -114,8 +112,7 @@ export const Shop = () => {
 
   const handleBrandChange = (id) => {
     const updatedBrands = selectedBrands.includes(id)
-      ? selectedBrands.filter((brandId) => brandId !== id)
-      : [...selectedBrands, id];
+      ? selectedBrands.filter((brandId) => brandId !== id) : [...selectedBrands, id];
     setSelectedBrands(updatedBrands);
     getAllProducts(`${apiUrl}get-all-products`, selectedCategories, updatedBrands);
 
@@ -151,13 +148,8 @@ export const Shop = () => {
 
 
   useEffect(() => {
-    if (selectedCategories.length === 0 && selectedBrands.length === 0) {
-      getAllProducts(); // Fetch all products if no filters are applied
-    } else {
-      getAllProducts(selectedCategories, selectedBrands); // Filter products based on selected categories and brands
-    }
+    getAllProducts(`${apiUrl}get-all-products`, selectedCategories, selectedBrands);
   }, [selectedCategories, selectedBrands]);
-
 
   return (
     <div>

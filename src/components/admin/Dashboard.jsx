@@ -1,10 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../common/Layout'
 
 import { Link } from 'react-router-dom';
 import SideBar from '../common/SideBar';
+import { apiUrl, token } from '../common/Http';
 
 const Dashboard = () => {
+
+  const [users, setUsers] = useState();
+  const [products, setProducts] = useState();
+
+  const dashboardAnalytics = async () => {
+    try {
+
+      const res = await fetch(`${apiUrl}dashboard-analytics`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token()}`,
+        },
+      });
+
+      const result = await res.json();
+      if (result.status == 200) {
+        setUsers(result.users);
+        setProducts(result.products);
+      } else {
+
+        console.log(result.error)
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    dashboardAnalytics();
+  }, []);
 
   return (
     <div>
@@ -26,12 +59,26 @@ const Dashboard = () => {
                 <div className="col-md-4 mb-3">
                   <div className='card shadow'>
                     <div className="card-body">
-                      <h2>1</h2>
+                      <h2>{users}</h2>
                       <span>Users</span>
                     </div>
 
                     <div className="card-footer">
-                      <a href="">View Users</a>
+                
+                      <Link to="/admin/user/list">View Users</Link>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-md-4 mb-3">
+                  <div className='card shadow'>
+                    <div className="card-body">
+                      <h2>{products}</h2>
+                      <span>Products</span>
+                    </div>
+
+                    <div className="card-footer">
+                      <Link to="/admin/products">View Orders</Link>
                     </div>
                   </div>
                 </div>
@@ -44,20 +91,7 @@ const Dashboard = () => {
                     </div>
 
                     <div className="card-footer">
-                    <a href="">View Orders</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-md-4 mb-3">
-                  <div className='card shadow'>
-                    <div className="card-body">
-                      <h2>1</h2>
-                      <span>Products</span>
-                    </div>
-
-                    <div className="card-footer">
-                    <a href="">View Products</a>
+                      <a href="">View Orders</a>
                     </div>
                   </div>
                 </div>

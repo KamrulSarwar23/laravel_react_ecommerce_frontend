@@ -12,6 +12,7 @@ const Header = () => {
 
   const { user } = useContext(CustomerAuthContext)
   const [cartCount, setCartCount] = useState(0);
+  const [categories, setCategories] = useState([]);
 
   const getCartCount = async () => {
     try {
@@ -37,8 +38,29 @@ const Header = () => {
     }
   };
 
+  const getCategories = async () => {
+    try {
+      const res = await fetch(`${apiUrl}categories-by-product`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      });
+
+      const result = await res.json();
+      setCategories(result.data);
+
+
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getCartCount();
+    getCategories();
   }, []);
 
   return (
@@ -60,9 +82,15 @@ const Header = () => {
             <Nav className="ms-auto my-2 my-lg-0">
               <Link className="nav-link" to="/">Home</Link>
               <Link className="nav-link" to="/shop">Shop</Link>
-              <Link className="nav-link" to="/mens/products">Mens</Link>
-              <Link className="nav-link" to="/womens/products">Womens</Link>
-              <Link className="nav-link" to="/kids/products">Kids</Link>
+
+              {
+                categories && categories.map((category, index) => {
+                  return (
+                    <Link key={index} className="nav-link" to={`/product-by-category/${category.id}`}>{category.name}</Link>
+                  )
+                })
+              }
+
               <div className="nav-right d-flex mt-2">
 
                 <Link to={user ? "/customer/dashboard" : "/login"} className="me-3 ms-2">
@@ -77,7 +105,7 @@ const Header = () => {
                   </svg>
                   <span className='text-danger'>{cartCount}</span>
                 </Link>
-                
+
               </div>
             </Nav>
           </Navbar.Collapse>

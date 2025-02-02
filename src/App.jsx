@@ -8,7 +8,7 @@ import Checkout from './components/common/Checkout'
 import Login from './components/admin/Login'
 import CustomerLogin from './components/customer/Login'
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import Dashboard from './components/admin/Dashboard'
 import CustomerDashboard from './components/customer/Dashboard'
 
@@ -27,13 +27,13 @@ import BrandUpdate from './components/admin/brand/Update'
 import ProductShow from './components/admin/product/Show'
 import ProductCreate from './components/admin/product/Create'
 import ProductUpdate from './components/admin/product/Update'
-import MensProduct from './components/common/MensProduct'
-import WomensProduct from './components/common/WomensProduct'
-import KidsProduct from './components/common/KidsProduct'
 import Register from './components/common/Register'
 
 import AdminProfile from './components/admin/Profile'
 import CustomerProfile from './components/Customer/Profile'
+import CategoryProduct from './components/common/CategoryProduct'
+
+import UserList from './components/admin/UserList'
 
 function App() {
 
@@ -44,11 +44,8 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/shop' element={<Shop />} />
 
-          <Route path='/mens/products' element={<MensProduct />} />
-          <Route path='/womens/products' element={<WomensProduct />} />
-          <Route path='/kids/products' element={<KidsProduct />} />
-
           <Route path='/product/:id' element={<Product />} />
+          <Route path='/product-by-category/:id' element={<CategoryProduct />} />
           <Route path='/cart' element={<Cart />} />
 
           <Route path='/checkout' element={<Checkout />} />
@@ -56,7 +53,7 @@ function App() {
           <Route path='/admin/login' element={<Login />} />
 
           <Route path='/login' element={<CustomerLogin />} />
-          
+
           <Route path='/register' element={<Register />} />
 
 
@@ -144,6 +141,13 @@ function App() {
           <Route path='/admin/products/edit/:id' element={
             <AdminRequireAuth>
               <ProductUpdate />
+            </AdminRequireAuth>
+          } />
+
+
+          <Route path='/admin/user/list' element={
+            <AdminRequireAuth>
+              <UserList />
             </AdminRequireAuth>
           } />
 

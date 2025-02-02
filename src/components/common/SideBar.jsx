@@ -39,8 +39,9 @@ const SideBar = () => {
             <li className={isActive("/admin/products") ? "active" : ""}><Link to={'/admin/products'}>Products</Link></li>
 
             <li><a href="">Orders</a></li>
-            <li><a href="">Users</a></li>
             <li><a href="">Shipping</a></li>
+            <li className={isActive("/admin/user/list") ? "active" : ""}><Link to={'/admin/user/list'}>Users</Link></li>
+        
             <li className={isActive("/admin/profile") ? "active" : ""}><Link to={'/admin/profile'}>Profile</Link></li>
             <li><Link onClick={logoutAdmin} href="#">Logout</Link></li>
           </ul>
