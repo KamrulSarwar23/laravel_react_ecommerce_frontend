@@ -47,6 +47,7 @@ const Cart = () => {
                     toast.success(result.message);
                     getCartProducts()
                     setSubTotal()
+                    // window.location.reload();
 
                 } else {
                     console.log('Something went wrong');

@@ -44,12 +44,7 @@ const FeaturedProduct = () => {
 
                 <div className="row mt-4">
 
-                    {loading ? (
-                        <div className="col-12 text-center">
-                            <Loader />
-                        </div>
-                    ) :
-                    featuredProducts && featuredProducts.map((featuredProduct, index) => {
+                    { featuredProducts && featuredProducts.map((featuredProduct, index) => {
                             return (
                                 <div key={`latest-product${index}`} className='col-lg-3 col-md-4 col-6 mb-4'>
 
