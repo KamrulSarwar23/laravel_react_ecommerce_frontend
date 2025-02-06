@@ -48,8 +48,6 @@ function App() {
           <Route path='/product-by-category/:id' element={<CategoryProduct />} />
           <Route path='/cart' element={<Cart />} />
 
-          <Route path='/checkout' element={<Checkout />} />
-
           <Route path='/admin/login' element={<Login />} />
 
           <Route path='/login' element={<CustomerLogin />} />
@@ -60,6 +58,12 @@ function App() {
           <Route path='/customer/dashboard' element={
             <CustomerRequireAuth>
               <CustomerDashboard />
+            </CustomerRequireAuth>
+          } />
+
+          <Route path='/checkout' element={
+            <CustomerRequireAuth>
+              <Checkout />
             </CustomerRequireAuth>
           } />
 

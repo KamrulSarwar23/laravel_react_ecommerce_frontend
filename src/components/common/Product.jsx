@@ -93,7 +93,7 @@ const Product = () => {
             if (result.status === 200) {
                 setCart(result.data);
                 toast.success(result.message);
-                navigate('/cart')
+                // navigate('/cart')
                 // Reset form
                 setSelectedSize("");
                 setSelectedColor("");
@@ -191,8 +191,7 @@ const Product = () => {
 
                                     watchSlidesProgress={true}
                                     modules={[FreeMode, Navigation, Thumbs]}
-                                    className="mySwiper mt-2"
-                                >
+                                    className="mySwiper mt-2">
 
                                     {
                                         productDetails.product_images && productDetails.product_images.map((image, index) => {
@@ -406,9 +405,9 @@ const Product = () => {
                                         <div className="card-body pt-3">
                                             <Link to={`/product/${product.id}`}>{product.title}</Link>
                                             <div className="price">
-                                                ${product.price}
+                                            ৳{product.price}
                                                 {product.compare_price && (
-                                                    <span className="ms-2 text-decoration-line-through">${product.compare_price}</span>
+                                                    <span className="ms-2 text-decoration-line-through">৳{product.compare_price}</span>
                                                 )}
                                             </div>
                                         </div>

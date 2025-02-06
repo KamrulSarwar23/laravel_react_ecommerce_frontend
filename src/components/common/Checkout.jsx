@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from './Layout'
 import { Link } from 'react-router-dom'
-import Proudct1 from '../../assets/images/mens/eight.jpg'
+import { apiUrl, customerToken, fileUrl } from './Http'
 const Checkout = () => {
 
     const [paymentMethod, setPaymentMethod] = useState('cod');
@@ -9,6 +9,40 @@ const Checkout = () => {
     const handlePaymentMethod = (e) => {
         setPaymentMethod(e.target.value);
     }
+
+        const [cartProducts, setCartProducts] = useState([]);
+        const [subtotal, setSubTotal] = useState([]);
+    
+        const getCartProducts = async () => {
+            const res = await fetch(`${apiUrl}cart`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    Authorization: `Bearer ${customerToken()}`,
+                }
+            }).then(res => res.json())
+                .then(result => {
+                    if (result.status == 200) {
+                        setCartProducts(result.cart)
+                        const total = result.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                        setSubTotal(total);
+    
+                    } else {
+                        console.log('Something went wrong');
+                    }
+                })
+        }
+
+
+            useEffect(() => {
+                getCartProducts();
+        
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                });
+            }, []);
 
     return (
         <div>
@@ -33,41 +67,41 @@ const Checkout = () => {
                             <form className='mt-4' action="">
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <div className='mb-3'>
+                                        <div className='mb-4'>
                                             <input type="text" className='form-control' placeholder='Name' />
                                         </div>
                                     </div>
 
                                     <div className="col-md-6">
-                                        <div className="mb-3">
+                                        <div className="mb-4">
                                             <input type="text" className='form-control' placeholder='Email' />
                                         </div>
                                     </div>
 
-                                    <div className="mb-3">
+                                    <div className="mb-4">
                                         <textarea type="text" className='form-control' placeholder='Address' rows={3} />
                                     </div>
 
                                     <div className="col-md-6">
-                                        <div className='mb-3'>
+                                        <div className='mb-4'>
                                             <input type="text" className='form-control' placeholder='City' />
                                         </div>
                                     </div>
 
                                     <div className="col-md-6">
-                                        <div className="mb-3">
+                                        <div className="mb-4">
                                             <input type="text" className='form-control' placeholder='State' />
                                         </div>
                                     </div>
 
                                     <div className="col-md-6">
-                                        <div className='mb-3'>
+                                        <div className='mb-4'>
                                             <input type="text" className='form-control' placeholder='Zip' />
                                         </div>
                                     </div>
 
                                     <div className="col-md-6">
-                                        <div className="mb-3">
+                                        <div className="mb-4">
                                             <input type="text" className='form-control' placeholder='Phone' />
                                         </div>
                                     </div>
@@ -76,79 +110,61 @@ const Checkout = () => {
                         </div>
 
                         <div className="col-md-5">
-                            <h3 className='border-bottom pb-2'><strong>Items</strong></h3>
+                               
+                           <div className='d-flex justify-between border-bottom'>
+                           <h3 className='pb-2 me-5'><strong>Items</strong></h3>
+                           <Link className='text-primary' to={'/cart'}>Modify Order</Link>
+                           </div>
 
                             <table className='table'>
                                 <tbody>
-                                    <tr>
-                                        <td width={100}> <img width={80} src={Proudct1} alt="" /> </td>
-                                        <td width={200}>
-                                            <div className="">
-                                                <div>Product Name Goes Here</div>
-                                                <div className="d-flex align-items-center">
-                                                    <span><span>৳</span>10</span>
-                                                    <button className='ms-4 btn btn-size'>L</button>
-                                                    <div className='ps-4'>
-                                                        x 1
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
 
-                                    </tr>
+                                    {
+                                        cartProducts && cartProducts.map(product => {
+                                            return (
+                                                <tr key={`product-${product.id}`}>
+                                                <td width={100}> <img width={80}  src={`${fileUrl}uploads/products/small/${product.image}`} alt="" /> </td>
+                                                <td width={200}>
+                                                    <div className="">
+                                                        <div>{product.name}</div>
+                                                        <div className="d-flex align-items-center">
+                                                            <span><span>৳</span>{product.price}</span>
 
-                                    <tr>
-                                        <td width={100}> <img width={80} src={Proudct1} alt="" /> </td>
-                                        <td width={500}>
-                                            <div className="">
-                                                <div>Product Name Goes Here</div>
-                                                <div className="d-flex align-items-center">
-                                                    <span><span>৳</span>10</span>
-                                                    <button className='ms-4 btn btn-size'>L</button>
-                                                    <div className='ps-4'>
-                                                        x 1
+                                                            <span className='ms-3'>{product.color}</span>
+                                                            <button className='ms-4 btn btn-size'>{product.size}</button>
+                                                            <div className='ps-4'>
+                                                                {product.quantity} Pcs
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td width={100}> <img width={80} src={Proudct1} alt="" /> </td>
-                                        <td width={500}>
-                                            <div className="">
-                                                <div>Product Name Goes Here</div>
-                                                <div className="d-flex align-items-center">
-                                                    <span><span>৳</span>10</span>
-                                                    <button className='ms-4 btn btn-size'>L</button>
-                                                    <div className='ps-4'>
-                                                        x 1
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                </td>
+        
+                                            </tr>
+                                            )
+                                        })
+                                    }
+                              
                                 </tbody>
                             </table>
 
-
+                                <span className='text-info'>You will get the delivery within 2-3 Days after confirmation.</span>
                             <div className='pt-3'>
 
                                 <div className="d-flex mb-2 justify-content-between border-bottom">
                                     <div className='me-2'> <strong>Sub Total:</strong> </div>
-                                    <div>$120</div>
+                                    <div>৳{subtotal}</div>
 
                                 </div>
 
                                 <div className="d-flex mb-2 justify-content-between border-bottom">
                                     <div className='me-2'> <strong>Shipping:</strong> </div>
-                                    <div>$5</div>
+                                    <div>৳60</div>
 
                                 </div>
 
                                 <div className="d-flex justify-content-between border-bottom mb-4">
                                     <div className='me-2'> <strong>Grand Total:</strong> </div>
-                                    <div>$120</div>
+                                    <div>৳{subtotal + 60 }</div>
 
                                 </div>
 

@@ -176,7 +176,7 @@ const Cart = () => {
 
                                                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                                         <span style={{ fontSize: "14px", color: "#555" }}>
-                                                            ${product.price}
+                                                            ৳{product.price}
                                                         </span>
 
                                                         <div>
@@ -204,7 +204,7 @@ const Cart = () => {
                                                 />
                                             </td>
                                             <td style={{ width: "100px", textAlign: "center", fontWeight: "bold" }}>
-                                                ${parseFloat(product.price * product.quantity).toFixed(2)}
+                                                ৳{parseFloat(product.price * product.quantity).toFixed(2)}
                                             </td>
                                             <td style={{ width: "50px", textAlign: "right" }}>
                                                 <button
@@ -261,9 +261,11 @@ const Cart = () => {
 
                         </div>
 
-                        <div className="d-flex justify-content-end">
-                            <button className='btn btn-primary'>Proceed To Checkout</button>
-                        </div>
+                        {
+                            cartProducts.length > 0 && <div className="d-flex justify-content-end">
+                                <Link to={'/checkout'} className='btn btn-primary'>Proceed To Checkout</Link>
+                            </div>
+                        }
 
 
                     </div>
