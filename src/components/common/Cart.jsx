@@ -47,7 +47,7 @@ const Cart = () => {
                     toast.success(result.message);
                     getCartProducts()
                     setSubTotal()
-                    // window.location.reload();
+                    window.location.reload();
 
                 } else {
                     console.log('Something went wrong');
@@ -56,6 +56,7 @@ const Cart = () => {
     }
 
     const handleQuantityChange = async (productId, newQuantity) => {
+
         if (newQuantity < 1) return;
 
         const res = await fetch(`${apiUrl}cart/update`, {
@@ -86,21 +87,11 @@ const Cart = () => {
 
                 return updatedCart;
             });
-        } else {
-            console.log("Error updating quantity");
+        } else if(result.status === 401) {
+            toast.error(result.message);
         }
     };
 
-
-    const handleDecrease = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
-    };
-
-    const handleIncrease = () => {
-        setQuantity(quantity + 1);
-    };
 
     useEffect(() => {
         getCartProducts();

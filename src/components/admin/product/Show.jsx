@@ -199,7 +199,8 @@ const Show = () => {
                                         {
                                             loader == true && <Loader />
                                         }
-                                        <table className="table table-striped">
+                                         <div className="table-responsive">
+                                         <table className="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>Id</th>
@@ -279,6 +280,8 @@ const Show = () => {
                                                 )}
                                             </tbody>
                                         </table>
+                                         </div>
+                                     
 
                                         {/* Pagination */}
                                         {paginator && paginator.total > paginator.per_page && (

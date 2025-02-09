@@ -110,53 +110,58 @@ const Show = () => {
                                         {
                                             loader == true && <Loader />
                                         }
-                                        <table className="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Name</th>
-                                                    <th>Status</th>
-                                                    <th>Created At</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
 
-                                            <tbody>
-                                                {brands && brands.length > 0 ? (
-                                                    brands.map((brand, index) => (
-                                                        <tr key={brand.id}>
-                                                            <td>{index + 1}</td>
-                                                            <td>{brand.name}</td>
-                                                            <td>
-                                                                {brand.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}
-                                                            </td>
-                                                            <td>
-                                                                {format(new Date(brand.created_at), "PPP")}
-                                                            </td>
-                                                            <td>
-                                                                <Link
-                                                                    to={`/admin/brands/edit/${brand.id}`}
-                                                                    className="btn btn-sm btn-info me-2"
-                                                                >
-                                                                    <i className="fa-solid fa-pen-to-square"></i>
-                                                                </Link>
-
-                                                                <button
-                                                                    onClick={() => deleteBrand(brand.id)}
-                                                                    className="btn btn-sm btn-danger"
-                                                                >
-                                                                    <i className="fa-solid fa-trash"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                ) : (
+                                        <div className="table-responsive">
+                                            <table className="table table-striped">
+                                                <thead>
                                                     <tr>
-                                                        <td className='text-center py-5' colSpan="5">No Brands Available</td>
+                                                        <th>Id</th>
+                                                        <th>Name</th>
+                                                        <th>Status</th>
+                                                        <th>Created At</th>
+                                                        <th>Action</th>
                                                     </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+
+                                                <tbody>
+                                                    {brands && brands.length > 0 ? (
+                                                        brands.map((brand, index) => (
+                                                            <tr key={brand.id}>
+                                                                <td>{index + 1}</td>
+                                                                <td>{brand.name}</td>
+                                                                <td>
+                                                                    {brand.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}
+                                                                </td>
+                                                                <td>
+                                                                    {format(new Date(brand.created_at), "PPP")}
+                                                                </td>
+                                                                <td>
+                                                                    <Link
+                                                                        to={`/admin/brands/edit/${brand.id}`}
+                                                                        className="btn btn-sm btn-info me-2"
+                                                                    >
+                                                                        <i className="fa-solid fa-pen-to-square"></i>
+                                                                    </Link>
+
+                                                                    <button
+                                                                        onClick={() => deleteBrand(brand.id)}
+                                                                        className="btn btn-sm btn-danger"
+                                                                    >
+                                                                        <i className="fa-solid fa-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    ) : (
+                                                        <tr>
+                                                            <td className='text-center py-5' colSpan="5">No Brands Available</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
                                     </div>
                                 </div>
                             </div>

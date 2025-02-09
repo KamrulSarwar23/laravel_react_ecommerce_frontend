@@ -14,29 +14,29 @@ const Header = () => {
   const [cartCount, setCartCount] = useState(0);
   const [categories, setCategories] = useState([]);
 
-  const getCartCount = async () => {
-    try {
-      const res = await fetch(`${apiUrl}cart/count`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${customerToken()}`,
-        },
-      });
+  // const getCartCount = async () => {
+  //   try {
+  //     const res = await fetch(`${apiUrl}cart/count`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //         Authorization: `Bearer ${customerToken()}`,
+  //       },
+  //     });
 
-      const result = await res.json();
+  //     const result = await res.json();
 
-      if (result.status === 200) {
-        setCartCount(result.data);
-      } else {
-        console.log("Failed to fetch cart count");
-      }
-    } catch (error) {
-      console.error("Error fetching cart count:", error);
-      toast.error("Something went wrong!");
-    }
-  };
+  //     if (result.status === 200) {
+  //       setCartCount(result.data);
+  //     } else {
+  //       console.log("Failed to fetch cart count");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching cart count:", error);
+  //     toast.error("Something went wrong!");
+  //   }
+  // };
 
   const getCategories = async () => {
     try {
@@ -59,7 +59,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    getCartCount();
+    // getCartCount();
     getCategories();
   }, []);
 
@@ -103,7 +103,7 @@ const Header = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="28" fill="currentColor" className="bi bi-bag" viewBox="0 0 16 16">
                     <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"></path>
                   </svg>
-                  <span className='text-danger'>{cartCount}</span>
+                  {/* <span className='text-danger'>{cartCount}</span> */}
                 </Link>
 
               </div>

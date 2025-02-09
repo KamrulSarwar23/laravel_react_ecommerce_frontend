@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Layout from "../common/Layout";
 import SideBar from "./SideBar";
-import { apiUrl, customerToken, token } from "../common/Http";
+import { apiUrl, customerToken } from "../common/Http";
 
 const Profile = () => {
     // Separate forms for profile and password updates

@@ -359,6 +359,13 @@ footer {
     border-radius: 4px;
 }
 
+td{
+   white-space: nowrap;
+}
+
+th{
+    white-space: nowrap;
+ }
 
 
 @media (min-width: 200px) and (max-width: 768px) {
@@ -394,7 +401,7 @@ footer {
 
 }
 
-@media (min-width: 200px) and (max-width: 500px) {
+@media (min-width: 200px) and (max-width: 576px) {
 
 
     .product {
@@ -410,6 +417,10 @@ footer {
     .largeImage img {
         height: 450px !important;
         width: 100% !important;
+    }
+
+    .smallImagesSlider{
+        display: none;
     }
 
 }

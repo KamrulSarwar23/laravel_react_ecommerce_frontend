@@ -28,6 +28,7 @@ const Product = () => {
     const [selectedSize, setSelectedSize] = useState(null);
 
     const [selectedColor, setSelectedColor] = useState(null);
+    const [stock, setStock] = useState(null);
 
     const [quantity, setQuantity] = useState(1);
 
@@ -41,14 +42,16 @@ const Product = () => {
         }).then(res => res.json())
             .then(result => {
                 if (result.status == 200) {
-                    setProductDetails(result.data)
 
+                    setProductDetails(result.data)
+                    setStock(result.data.qty)
+                 
                     if (result.data.colors) {
                         const colorArray = result.data.colors.split(",").map((color) => color.trim());
                         setColors(colorArray);
 
                     }
-
+                    
                 } else {
                     console.log('Something went wrong');
                 }
@@ -176,7 +179,7 @@ const Product = () => {
 
                     <div className="col-md-5 mb-3">
                         <div className="row">
-                            <div className="col-2">
+                            <div className="col-2 smallImagesSlider">
                                 <Swiper
                                     style={{
                                         '--swiper-navigation-color': '#000',
@@ -194,9 +197,9 @@ const Product = () => {
                                     className="mySwiper mt-2">
 
                                     {
-                                        productDetails.product_images && productDetails.product_images.map((image, index) => {
+                                        productDetails.product_images && productDetails.product_images.map(image => {
                                             return (
-                                                <SwiperSlide key={index}>
+                                                <SwiperSlide key={`image-${image.id}`}>
                                                     <div className='content smallImage'>
                                                         <img
                                                             src={image.image_url}
@@ -214,7 +217,7 @@ const Product = () => {
 
                             </div>
 
-                            <div className="col-10">
+                            <div className="col-sm-10 ">
                                 <Swiper
                                     style={{
                                         '--swiper-navigation-color': '#000',
@@ -229,9 +232,9 @@ const Product = () => {
                                 >
 
                                     {
-                                        productDetails.product_images && productDetails.product_images.map((image, index) => {
+                                        productDetails.product_images && productDetails.product_images.map(image => {
                                             return (
-                                                <SwiperSlide key={`product-${index}`} >
+                                                <SwiperSlide key={`image-${image.id}`} >
                                                     <div className='content largeImage'>
                                                         <img
                                                             src={`${fileUrl}uploads/products/large/${image.image}`}
@@ -290,7 +293,7 @@ const Product = () => {
                                             <button
                                                 key={index}
                                                 onClick={() => setSelectedSize(size.name)}
-                                                className={`btn btn-size px-3 py-1 rounded border  ${isSelected ? "bg-secondary text-white" : "bg-gray-200 text-black"
+                                                className={`btn btn-size mb-2 px-3 py-1 rounded border  ${isSelected ? "bg-secondary text-white" : "bg-gray-200 text-black"
                                                     }`}
                                             >
                                                 {size.name}
@@ -346,9 +349,14 @@ const Product = () => {
                             </button>
                         </div>
 
+                       <div className='mt-2 text-danger'>
+                       {
+                            stock == 0 && <span>Stock Out</span>
+                        }
+                       </div>
 
                         <div className='add-to-cart my-3'>
-                            <button onClick={() => handleAddToCart(productDetails.id, quantity, selectedSize, selectedColor)} className='btn btn-primary text-uppercase'>Add To Cart</button>
+                            <button disabled={stock == 0} onClick={() => handleAddToCart(productDetails.id, quantity, selectedSize, selectedColor)} className='btn btn-primary text-uppercase'>Add To Cart</button>
                         </div>
 
 

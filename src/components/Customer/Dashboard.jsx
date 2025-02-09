@@ -23,44 +23,15 @@ const Dashboard = () => {
             <div className="col-md-9">
               <div className="row mt-4">
 
-                <div className="col-md-4 mb-3">
+                <div className="col-md-12 mb-3">
                   <div className='card shadow'>
-                    <div className="card-body">
-                      <h2>1</h2>
-                      <span>Users</span>
-                    </div>
-
-                    <div className="card-footer">
-                      <a href="">View Users</a>
+                    <div className="card-body text-center py-5">
+                     
+                      <h2>Customer Dashboard</h2>
                     </div>
                   </div>
                 </div>
 
-                <div className="col-md-4 mb-3">
-                  <div className='card shadow'>
-                    <div className="card-body">
-                      <h2>1</h2>
-                      <span>Orders</span>
-                    </div>
-
-                    <div className="card-footer">
-                    <a href="">View Orders</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-md-4 mb-3">
-                  <div className='card shadow'>
-                    <div className="card-body">
-                      <h2>1</h2>
-                      <span>Products</span>
-                    </div>
-
-                    <div className="card-footer">
-                    <a href="">View Products</a>
-                    </div>
-                  </div>
-                </div>
 
 
               </div>

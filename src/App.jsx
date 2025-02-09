@@ -34,6 +34,12 @@ import CustomerProfile from './components/Customer/Profile'
 import CategoryProduct from './components/common/CategoryProduct'
 
 import UserList from './components/admin/UserList'
+import PaymentSuccess from './components/common/PaymentSuccess'
+import OrderList from './components/admin/OrderList'
+import TransactionList from './components/admin/TransactionList'
+import Invoice from './components/admin/Invoice'
+import CustomerOrderList from './components/Customer/OrderList'
+import CustomerInvoice from './components/Customer/Invoice'
 
 function App() {
 
@@ -58,6 +64,26 @@ function App() {
           <Route path='/customer/dashboard' element={
             <CustomerRequireAuth>
               <CustomerDashboard />
+            </CustomerRequireAuth>
+          } />
+
+
+          <Route path='/order/success' element={
+            <CustomerRequireAuth>
+              <PaymentSuccess />
+            </CustomerRequireAuth>
+          } />
+
+          <Route path='/customer/order/list' element={
+            <CustomerRequireAuth>
+              <CustomerOrderList />
+            </CustomerRequireAuth>
+          } />
+
+
+          <Route path='/customer/invoice/:id' element={
+            <CustomerRequireAuth>
+              <CustomerInvoice />
             </CustomerRequireAuth>
           } />
 
@@ -152,6 +178,24 @@ function App() {
           <Route path='/admin/user/list' element={
             <AdminRequireAuth>
               <UserList />
+            </AdminRequireAuth>
+          } />
+
+          <Route path='/admin/orders' element={
+            <AdminRequireAuth>
+              <OrderList />
+            </AdminRequireAuth>
+          } />
+
+          <Route path='/admin/transactions' element={
+            <AdminRequireAuth>
+              <TransactionList />
+            </AdminRequireAuth>
+          } />
+
+          <Route path='/admin/invoice/:id' element={
+            <AdminRequireAuth>
+              <Invoice />
             </AdminRequireAuth>
           } />
 

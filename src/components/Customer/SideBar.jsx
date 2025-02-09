@@ -35,7 +35,7 @@ const SideBar = () => {
         <div className="card-body">
           <ul>
             <li className={isActive("/customer/dashboard") ? "active" : ""}><Link to={'/customer/dashboard'}>Dashboard</Link></li>
-            <li><a href="">Orders</a></li>
+            <li className={isActive("/customer/order/list") ? "active" : ""}><Link to={'/customer/order/list'}>Orders</Link></li>
             <li className={isActive("/customer/profile") ? "active" : ""}><Link to={'/customer/profile'}>Profile</Link></li>
             <li><Link onClick={logoutAdmin} href="#">Logout</Link></li>
           </ul>

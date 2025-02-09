@@ -9,6 +9,7 @@ const Dashboard = () => {
 
   const [users, setUsers] = useState();
   const [products, setProducts] = useState();
+  const [orders, setOrders] = useState();
 
   const dashboardAnalytics = async () => {
     try {
@@ -26,6 +27,7 @@ const Dashboard = () => {
       if (result.status == 200) {
         setUsers(result.users);
         setProducts(result.products);
+        setOrders(result.orders)
       } else {
 
         console.log(result.error)
@@ -78,7 +80,7 @@ const Dashboard = () => {
                     </div>
 
                     <div className="card-footer">
-                      <Link to="/admin/products">View Orders</Link>
+                      <Link to="/admin/products">View Products</Link>
                     </div>
                   </div>
                 </div>
@@ -86,12 +88,12 @@ const Dashboard = () => {
                 <div className="col-md-4 mb-3">
                   <div className='card shadow'>
                     <div className="card-body">
-                      <h2>1</h2>
+                      <h2>{orders}</h2>
                       <span>Orders</span>
                     </div>
 
                     <div className="card-footer">
-                      <a href="">View Orders</a>
+                    <Link to="/admin/orders">View Orders</Link>
                     </div>
                   </div>
                 </div>

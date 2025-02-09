@@ -7,15 +7,15 @@ import SideBar from '../common/SideBar';
 import { apiUrl, token } from '../common/Http';
 import Loader from '../common/Loader';
 
-const UserList = () => {
-    const [users, setUsers] = useState([]);
+const TransactionList = () => {
+    const [transactions, setTransactions] = useState([]);
     const [loader, setLoader] = useState(false);
 
     // Fetch categories from API
-    const fetchUsers = async () => {
+    const fetchOrders = async () => {
         try {
             setLoader(true)
-            const res = await fetch(`${apiUrl}user-list`, {
+            const res = await fetch(`${apiUrl}transaction-list`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const UserList = () => {
             const result = await res.json();
             if (result.data) {
                 setLoader(false)
-                setUsers(result.data);
+                setTransactions(result.data);
 
             } else {
                 setLoader(false)
@@ -39,48 +39,48 @@ const UserList = () => {
     };
 
     // Delete category
-    const deleteUser = async (id) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
+    // const deleteUser = async (id) => {
+    //     Swal.fire({
+    //         title: "Are you sure?",
+    //         text: "You won't be able to revert this!",
+    //         icon: "warning",
+    //         showCancelButton: true,
+    //         confirmButtonColor: "#3085d6",
+    //         cancelButtonColor: "#d33",
+    //         confirmButtonText: "Yes, delete it!",
+    //     }).then(async (result) => {
+    //         if (result.isConfirmed) {
+    //             try {
 
-                    const res = await fetch(`${apiUrl}users/${id}`, {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Accept: "application/json",
-                            Authorization: `Bearer ${token()}`,
-                        },
-                    });
+    //                 const res = await fetch(`${apiUrl}users/${id}`, {
+    //                     method: "DELETE",
+    //                     headers: {
+    //                         "Content-Type": "application/json",
+    //                         Accept: "application/json",
+    //                         Authorization: `Bearer ${token()}`,
+    //                     },
+    //                 });
 
-                    const result = await res.json();
+    //                 const result = await res.json();
 
-                    if (result.status === 200) {
-                        setUsers(users.filter((user) => user.id !== id));
+    //                 if (result.status === 200) {
+    //                     setUsers(users.filter((user) => user.id !== id));
 
-                        Swal.fire("Deleted!", result.message, "success");
-                    } else if (result.status === 400) {
-                        Swal.fire("Error!", result.message, "error");
-                    } else {
-                        Swal.fire("Error", result.message, "error");
-                    }
-                } catch (error) {
-                    Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
-                }
-            }
-        });
-    };
+    //                     Swal.fire("Deleted!", result.message, "success");
+    //                 } else if(result.status === 400){
+    //                     Swal.fire("Error!", result.message, "error");
+    //                 }else {
+    //                     Swal.fire("Error", result.message, "error");
+    //                 }
+    //             } catch (error) {
+    //                 Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
+    //             }
+    //         }
+    //     });
+    // };
 
     useEffect(() => {
-        fetchUsers();
+        fetchOrders();
     }, []);
 
     return (
@@ -97,13 +97,13 @@ const UserList = () => {
                                 <div className="card shadow border-0">
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
-                                            <h4 className="h5">Users List</h4>
-                                            <Link
+                                            <h4 className="h5">Order List</h4>
+                                            {/* <Link
                                                 className="btn btn-primary"
                                                 to={"/admin/categories/create"}
                                             >
                                                 Create
-                                            </Link>
+                                            </Link> */}
                                         </div>
 
                                         <hr />
@@ -117,32 +117,36 @@ const UserList = () => {
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Name</th>
-                                                        <th>Email</th>
+                                                        <th>Transaction Id</th>
+                                                        <th>Payment Method</th>
+                                                        <th>Amount</th>
                                                         <th>Created At</th>
-                                                        <th>Updated At</th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                    {users && users.length > 0 ? (
-                                                        users.map((user, index) => (
-                                                            <tr key={user.id}>
+                                                    {transactions && transactions.length > 0 ? (
+                                                        transactions.map((transaction, index) => (
+                                                            <tr key={transaction.id}>
                                                                 <td>{index + 1}</td>
-                                                                <td>{user.name}</td>
-                                                                <td>{user.email}</td>
+                                                                <td>{transaction.transaction_id}</td>
+
+                                                                <td>{transaction.payment_method}</td>
+                                                                <td>{transaction.amount}</td>
+
+
                                                                 <td>
-                                                                    {format(new Date(user.created_at), "PPP")}
+                                                                    {format(new Date(transaction.created_at), "PPP")}
                                                                 </td>
                                                                 <td>
 
-                                                                    {format(new Date(user.updated_at), "PPP")}
+
                                                                 </td>
                                                             </tr>
                                                         ))
                                                     ) : (
                                                         <tr>
-                                                            <td className='text-center py-5' colSpan="5">No Users Available</td>
+                                                            <td className='text-center py-5' colSpan="5">No Transactions Available</td>
                                                         </tr>
                                                     )}
                                                 </tbody>
@@ -161,4 +165,4 @@ const UserList = () => {
     );
 };
 
-export default UserList;
+export default TransactionList;

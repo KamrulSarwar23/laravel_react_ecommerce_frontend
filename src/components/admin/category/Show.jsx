@@ -110,7 +110,8 @@ const Show = () => {
                                         {
                                             loader == true && <Loader />
                                         }
-                                        <table className="table table-striped">
+                                       <div className="table-responsive">
+                                       <table className="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>Id</th>
@@ -131,9 +132,11 @@ const Show = () => {
                                                                 {category.status === 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}
                                                             </td>
                                                             <td>
+
                                                                 {format(new Date(category.created_at), "PPP")}
                                                             </td>
-                                                            <td>
+
+                                                            <td className='d-flex'>
                                                                 <Link
                                                                     to={`/admin/categories/edit/${category.id}`}
                                                                     className="btn btn-sm btn-info me-2"
@@ -157,6 +160,7 @@ const Show = () => {
                                                 )}
                                             </tbody>
                                         </table>
+                                       </div>
                                     </div>
                                 </div>
                             </div>
@@ -169,3 +173,5 @@ const Show = () => {
 };
 
 export default Show;
+
+
