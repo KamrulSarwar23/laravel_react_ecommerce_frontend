@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Layout from './Layout'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -12,25 +12,98 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { apiUrl, customerToken, fileUrl } from '../common/Http'
 import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
+import { format } from "date-fns";
+import { CustomerAuthContext } from '../context/CustomerAuth';
 
 const Product = () => {
     const navigate = useNavigate();
-
+    const { user } = useContext(CustomerAuthContext)
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [suggestedProducts, setSuggestedProducts] = useState([]);
-    const [rating, setRating] = useState(4);
     const params = useParams();
     const [productDetails, setProductDetails] = useState([]);
     const [colors, setColors] = useState([]);
     const [cart, setCart] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const [reviewCount, setReviewCount] = useState(0);
+    const [ratingCount, setRatingCount] = useState(0);
     const [selectedSize, setSelectedSize] = useState(null);
 
     const [selectedColor, setSelectedColor] = useState(null);
     const [stock, setStock] = useState(null);
-
+    const [reviews, setReviews] = useState([]);
     const [quantity, setQuantity] = useState(1);
+
+    const [selectedRating, setSelectedRating] = useState(null);
+
+    const handleRatingClick = (rating) => {
+        setSelectedRating(rating);
+    };
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
+
+    const onSubmit = async (data) => {
+
+        if (selectedRating == null) {
+            toast.error('Please Select a rating');
+        }
+
+        const newData = { ...data, "rating": selectedRating};
+        const res = await fetch(`${apiUrl}product-review-submit/${params.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${customerToken()}`,
+            },
+            body: JSON.stringify(newData),
+        });
+
+        const result = await res.json();
+
+        if (result.status == 200) {
+            getProductReviews();
+            setSelectedRating('')
+            toast.success(result.message);
+            reset();
+
+        } else {
+            toast.error(result.errors);
+            setSelectedRating('')
+        }
+    };
+
+    const getProductReviews = async () => {
+        try {
+            const res = await fetch(`${apiUrl}product-review-list/${params.id}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            });
+
+            const result = await res.json();
+
+            if (result.status === 200) {
+                setReviews(result.data);
+                setReviewCount(result.reviewCount)
+                setRatingCount(result.ratingCount)
+
+            } else {
+                console.error('Something went wrong:', result);
+            }
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+        }
+    };
+
 
     const getProductDetails = async () => {
         const res = await fetch(`${apiUrl}products-details/${params.id}`, {
@@ -45,13 +118,13 @@ const Product = () => {
 
                     setProductDetails(result.data)
                     setStock(result.data.qty)
-                 
+
                     if (result.data.colors) {
                         const colorArray = result.data.colors.split(",").map((color) => color.trim());
                         setColors(colorArray);
 
                     }
-                    
+
                 } else {
                     console.log('Something went wrong');
                 }
@@ -96,7 +169,7 @@ const Product = () => {
             if (result.status === 200) {
                 setCart(result.data);
                 toast.success(result.message);
-                // navigate('/cart')
+                navigate('/cart')
                 // Reset form
                 setSelectedSize("");
                 setSelectedColor("");
@@ -150,7 +223,7 @@ const Product = () => {
     useEffect(() => {
         getProductDetails();
         getSuggestedProducts();
-
+        getProductReviews();
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
@@ -256,15 +329,24 @@ const Product = () => {
                         <h2>{productDetails.title}</h2>
 
                         <div className='d-flex align-items-center'>
-                            <div className='mt-1'>
-                                <Rating
-                                    size={25}
-                                    initialValue={rating}
-                                    readonly
-                                    className='mb-1'
-                                />
+                            <div>
+                     
+                                {[...Array(5)].map((_, i) => {
+                                    const isFullStar = i < Math.floor(ratingCount);
+                                    const isHalfStar = i === Math.floor(ratingCount) && ratingCount % 1 !== 0;
+
+                                    return (
+                                        <span
+                                            key={i}
+                                            className={isFullStar ? "ratingStar text-warning" : isHalfStar ? "ratingStar text-warning" : "ratingStar text-secondary"}
+                                        >
+                                            {isFullStar ? '★' : isHalfStar ? '⯪' : '☆'}
+                                        </span>
+                                    );
+                                })}
+
                             </div>
-                            <span className='ps-2'>10 Reviews</span>
+                            <span className='ps-2'>{reviewCount} Reviews</span>
                         </div>
 
                         <div className='price h5 py-3'>
@@ -349,11 +431,11 @@ const Product = () => {
                             </button>
                         </div>
 
-                       <div className='mt-2 text-danger'>
-                       {
-                            stock == 0 && <span>Stock Out</span>
-                        }
-                       </div>
+                        <div className='mt-3 text-danger'>
+                            {
+                                stock == 0 && <h3>Stock Out</h3>
+                            }
+                        </div>
 
                         <div className='add-to-cart my-3'>
                             <button disabled={stock == 0} onClick={() => handleAddToCart(productDetails.id, quantity, selectedSize, selectedColor)} className='btn btn-primary text-uppercase'>Add To Cart</button>
@@ -382,8 +464,75 @@ const Product = () => {
                                 <div dangerouslySetInnerHTML={{ __html: productDetails.description }} />
                             </Tab>
 
-                            <Tab eventKey="profile" title="Reviews (10)">
-                                Reviews
+                            <Tab eventKey="profile" title={`Reviews (${reviewCount})`}>
+                                <div className="row">
+                                    <div className="col-md-8">  
+                                        <h4 className="mb-3">Customer Reviews</h4>
+                                        <div className="list-group">
+                                            {reviews.length > 0 ? (reviews.map((review, index) => (
+                                                <div key={index} className="list-group-item p-3 mb-3 shadow-sm">
+                                                    <div className="d-flex justify-content-between">
+                                                        <h5 className="mb-1">{review.user.name}</h5>
+                                                        <small className="text-muted">
+                                                            {review.created_at ? format(new Date(review.created_at), "PPP p") : "Unknown Date"}
+                                                        </small>
+                                                    </div>
+                                                    <div className="mb-2">
+                                                        {[...Array(5)].map((_, i) => (
+                                                            <span key={i} className={i < review.rating ? "ratingStar text-warning" : "ratingStar text-secondary"}>
+                                                                ★
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                    <p className="mb-1">{review.comment}</p>
+                                                </div>
+                                            ))
+                                            ) : (
+                                                <p className="text-muted">No reviews yet.</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {
+                                        user && <div className="col-md-4">
+                                            <form onSubmit={handleSubmit(onSubmit)}>
+                                      
+                                                <div>
+                                                    <label>Select Rating</label>
+                                                    <div className="star-rating mb-2">
+                                                        {[1, 2, 3, 4, 5].map(num => (
+                                                            <span
+                                                                key={num}
+                                                                className={num <= selectedRating ? "text-warning ratingStar" : "text-secondary ratingStar"}
+                                                                onClick={() => handleRatingClick(num)}
+                                                                style={{ cursor: "pointer", fontSize: "28px", marginRight: "5px" }}
+                                                            >
+                                                                ★
+                                                            </span>
+                                                        ))}
+                                                    </div>
+
+                                                </div>
+
+                                                <textarea
+                                                    className='form-control mb-3'
+                                                    placeholder="Leave a comment"
+                                                    {...register('comment', { required: 'Comment is required' })}
+                                                    rows={4}
+                                                />
+                                                {errors.comment && <p className="text-danger">{errors.comment.message}</p>}
+
+                                                <div>
+                                                    <button type="submit" className="btn btn-primary">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    }
+
+
+                                </div>
                             </Tab>
 
                         </Tabs>
@@ -413,7 +562,7 @@ const Product = () => {
                                         <div className="card-body pt-3">
                                             <Link to={`/product/${product.id}`}>{product.title}</Link>
                                             <div className="price">
-                                            ৳{product.price}
+                                                ৳{product.price}
                                                 {product.compare_price && (
                                                     <span className="ms-2 text-decoration-line-through">৳{product.compare_price}</span>
                                                 )}

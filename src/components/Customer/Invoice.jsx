@@ -78,6 +78,8 @@ const Invoice = () => {
                                                         <th>Product Image</th>
                                                         <th>Product Name</th>
                                                         <th>Unit Price</th>
+                                                        <th>Size</th>
+                                                        <th>Color</th>
                                                         <th>Quantity</th>
                                                         <th>Subtotal</th>
                                                         <th>Order Date</th>
@@ -93,10 +95,12 @@ const Invoice = () => {
                                                                 <td><img width={70} src={`${fileUrl}uploads/products/small/${orderItem.image}`} alt="" /> </td>
                                                                 <td>{orderItem.product_name}</td>
                                                                 <td>{orderItem.unit_price}</td>
+                                                                <td>{orderItem.size}</td>
+                                                                <td>{orderItem.color || '-'}</td>
                                                                 <td>{orderItem.qty}</td>
                                                                 <td>{orderItem.unit_price * orderItem.qty}</td>
                                                                 <td>
-                                                                    {format(new Date(orderItem.created_at), "PPP")}
+                                                                    {format(new Date(orderItem.created_at), "PPP p")}
                                                                 </td>
 
 
@@ -108,7 +112,7 @@ const Invoice = () => {
                                                         ))
                                                     ) : (
                                                         <tr>
-                                                            <td className='text-center py-5' colSpan="8">No Invoice Available</td>
+                                                            <td className='text-center py-5' colSpan="9">No Invoice Available</td>
                                                         </tr>
                                                     )}
                                                 </tbody>
@@ -117,13 +121,12 @@ const Invoice = () => {
                                             </table>
                                         </div>
 
-
                                     </div>
                                     <div className="row">
                                         <div className="col-md-12 text-end">
                                             <div className='me-3 mb-3'>
                                                 <h4>SubTotal: {orderItems.sub_total}</h4>
-                                                <h4>Delivery Fee: 60</h4>
+                                                <h4>Delivery Fee: {orderItems.shipping_amount}</h4>
                                                 <h4>Total: {orderItems.amount}</h4>
                                             </div>
                                         </div>

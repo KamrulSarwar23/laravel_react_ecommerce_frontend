@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^5.6.0",
     "bootstrap": "^5.3.3",
     "date-fns": "^4.1.0",
     "jodit-react": "^5.0.10",
@@ -20,6 +21,7 @@
     "react-router-dom": "^7.1.1",
     "react-simple-star-rating": "^3.0.0",
     "react-sweetalert2": "^0.6.0",
+    "react-to-print": "^3.0.5",
     "react-toastify": "^11.0.3",
     "swiper": "^11.2.1"
   },

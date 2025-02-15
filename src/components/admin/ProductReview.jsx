@@ -7,15 +7,15 @@ import SideBar from '../common/SideBar';
 import { apiUrl, token } from '../common/Http';
 import Loader from '../common/Loader';
 
-const TransactionList = () => {
-    const [transactions, setTransactions] = useState([]);
+const ProductReview = () => {
+    const [reviews, setReviews] = useState([]);
     const [loader, setLoader] = useState(false);
 
     // Fetch categories from API
     const fetchOrders = async () => {
         try {
             setLoader(true)
-            const res = await fetch(`${apiUrl}transaction-list`, {
+            const res = await fetch(`${apiUrl}product-reviews`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const TransactionList = () => {
             const result = await res.json();
             if (result.data) {
                 setLoader(false)
-                setTransactions(result.data);
+                setReviews(result.data);
 
             } else {
                 setLoader(false)
@@ -39,45 +39,46 @@ const TransactionList = () => {
     };
 
     // Delete category
-    // const deleteUser = async (id) => {
-    //     Swal.fire({
-    //         title: "Are you sure?",
-    //         text: "You won't be able to revert this!",
-    //         icon: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#3085d6",
-    //         cancelButtonColor: "#d33",
-    //         confirmButtonText: "Yes, delete it!",
-    //     }).then(async (result) => {
-    //         if (result.isConfirmed) {
-    //             try {
 
-    //                 const res = await fetch(`${apiUrl}users/${id}`, {
-    //                     method: "DELETE",
-    //                     headers: {
-    //                         "Content-Type": "application/json",
-    //                         Accept: "application/json",
-    //                         Authorization: `Bearer ${token()}`,
-    //                     },
-    //                 });
+    const deleteReview = async (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
 
-    //                 const result = await res.json();
+                    const res = await fetch(`${apiUrl}remove-product-review/${id}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            Authorization: `Bearer ${token()}`,
+                        },
+                    });
 
-    //                 if (result.status === 200) {
-    //                     setUsers(users.filter((user) => user.id !== id));
+                    const result = await res.json();
 
-    //                     Swal.fire("Deleted!", result.message, "success");
-    //                 } else if(result.status === 400){
-    //                     Swal.fire("Error!", result.message, "error");
-    //                 }else {
-    //                     Swal.fire("Error", result.message, "error");
-    //                 }
-    //             } catch (error) {
-    //                 Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
-    //             }
-    //         }
-    //     });
-    // };
+                    if (result.status === 200) {
+                        setReviews(reviews.filter((review) => review.id !== id));
+
+                        Swal.fire("Deleted!", result.message, "success");
+                    } else if (result.status === 400) {
+                        Swal.fire("Error!", result.message, "error");
+                    } else {
+                        Swal.fire("Error", result.message, "error");
+                    }
+                } catch (error) {
+                    Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
+                }
+            }
+        });
+    };
 
     useEffect(() => {
         fetchOrders();
@@ -97,13 +98,8 @@ const TransactionList = () => {
                                 <div className="card shadow border-0">
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
-                                            <h4 className="h5">Transaction List</h4>
-                                            {/* <Link
-                                                className="btn btn-primary"
-                                                to={"/admin/categories/create"}
-                                            >
-                                                Create
-                                            </Link> */}
+                                            <h4 className="h5">Product Review</h4>
+
                                         </div>
 
                                         <hr />
@@ -117,39 +113,40 @@ const TransactionList = () => {
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Transaction Id</th>
-                                                        <th>Payment Method</th>
-                                                        <th>Payment Status</th>
-                                                        <th>Amount</th>
+                                                        <th>Comment</th>
+                                                        <th>Rating</th>
                                                         <th>Created At</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                    {transactions && transactions.length > 0 ? (
-                                                        transactions.map((transaction, index) => (
-                                                            <tr key={transaction.id}>
+                                                    {reviews && reviews.length > 0 ? (
+                                                        reviews.map((review, index) => (
+                                                            <tr key={review.id}>
                                                                 <td>{index + 1}</td>
-                                                                <td>{transaction.transaction_id}</td>
+                                                                <td>{review.comment}</td>
+                                                                <td>
 
-                                                                <td>{transaction.payment_method}</td>
+                                                                    {[...Array(5)].map((_, i) => (
+                                                                        <span key={i} className={i < review.rating ? "text-warning" : "text-secondary"}>
+                                                                            ★
+                                                                        </span>
+                                                                    ))}
 
-                                                                {
-                                                                    transaction.payment_status == 0 && <td>Pending</td>
-                                                                }
-
-                                                                {
-                                                                    transaction.payment_status == 1 && <td>Paid</td>
-                                                                }
-
-                                                                <td>{transaction.amount}</td>
+                                                                </td>
 
 
                                                                 <td>
-                                                                {format(new Date(transaction.created_at), "PPP p")}
+                                                                    {format(new Date(review.created_at), "PPP p")}
                                                                 </td>
                                                                 <td>
-
+                                                                    <button
+                                                                        onClick={() => deleteReview(review.id)}
+                                                                        className="btn btn-sm btn-danger"
+                                                                    >
+                                                                        <i className="fa-solid fa-trash"></i>
+                                                                    </button>
 
                                                                 </td>
                                                             </tr>
@@ -175,4 +172,4 @@ const TransactionList = () => {
     );
 };
 
-export default TransactionList;
+export default ProductReview;

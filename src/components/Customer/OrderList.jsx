@@ -161,7 +161,7 @@ const OrderList = () => {
                                                                 <td>{order.order_status}</td>
 
                                                                 <td>
-                                                                    {format(new Date(order.created_at), "PPP")}
+                                                                    {format(new Date(order.created_at), "PPP p")}
                                                                 </td>
 
                                                                 <td>

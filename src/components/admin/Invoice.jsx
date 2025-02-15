@@ -12,8 +12,10 @@ const Invoice = () => {
     const params = useParams();
     const [orderItems, setOrderItems] = useState([]);
     const [loader, setLoader] = useState(false);
-    const [paymentStatus, setPaymentStatus] = useState();
-    const [orderStatus, setOrderStatus] = useState();
+    const [paymentStatus, setPaymentStatus] = useState('');
+    const [orderStatus, setOrderStatus] = useState('');
+
+    
     // Fetch categories from API
     const fetchOrderItems = async () => {
         try {
@@ -33,7 +35,7 @@ const Invoice = () => {
                 setOrderItems(result.data);
                 setPaymentStatus(result.data.payment_status)
                 setOrderStatus(result.data.order_status)
-              
+
             } else {
                 setLoader(false)
                 console.log(result.error)
@@ -44,8 +46,6 @@ const Invoice = () => {
     };
 
     const changePaymentStatus = async () => {
-
-
 
         const res = await fetch(`${apiUrl}change-payment-status/${params.id}`, {
             method: 'PUT',
@@ -59,10 +59,10 @@ const Invoice = () => {
         const result = await res.json();
 
         if (result.status == 200) {
-         toast.success(result.message)
-          
+            toast.success(result.message)
+
         } else {
-            
+
             toast.error('Something Went Wrong')
         }
     }
@@ -82,10 +82,10 @@ const Invoice = () => {
         const result = await res.json();
 
         if (result.status == 200) {
-         toast.success(result.message)
-          
+            toast.success(result.message)
+
         } else {
-            
+
             toast.error('Something Went Wrong')
         }
     }
@@ -114,21 +114,21 @@ const Invoice = () => {
 
                                             <h4 className="h5">Invoice Id: {orderItems.invoice_id}</h4>
 
-                                          <div className="d-flex justify-content-between">
-                                          <select onChange={changePaymentStatus} className='form-control me-3' name="" id="">
-                                                <option disabled value="">Payment Status</option>
-                                                <option selected={paymentStatus == 0} value="0">Pending</option>
-                                                <option selected={paymentStatus == 1} value="1">Paid</option>
-                                            </select>
-                                            <select onChange={changeOrderStatus} className='form-control me-3' name="" id="">
-                                                <option disabled value="">Order Status</option>
-                                                <option selected={orderStatus == 'pending'} value="pending">Pending</option>
-                                                <option selected={orderStatus == 'delivered'} value="delivered">Delivered</option>
-                                            </select>
-                                          </div>
+                                            <div className="d-flex justify-content-between">
+                                                <select onChange={changePaymentStatus} className='form-control me-3' name="" id="">
+                                                    <option disabled value="">Payment Status</option>
+                                                    <option selected={paymentStatus == 0} value="0">Pending</option>
+                                                    <option selected={paymentStatus == 1} value="1">Paid</option>
+                                                </select>
+                                                <select onChange={changeOrderStatus} className='form-control me-3' name="" id="">
+                                                    <option disabled value="">Order Status</option>
+                                                    <option selected={orderStatus == 'pending'} value="pending">Pending</option>
+                                                    <option selected={orderStatus == 'delivered'} value="delivered">Delivered</option>
+                                                </select>
+                                            </div>
 
-                                 
-                                
+
+
                                         </div>
 
                                         <hr />
@@ -136,65 +136,69 @@ const Invoice = () => {
                                         {
                                             loader == true && <Loader />
                                         }
-                                          <div className="table-responsive">
-                                          <table className="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Product Image</th>
-                                                    <th>Product Name</th>
-                                                    <th>Unit Price</th>
-                                                    <th>Quantity</th>
-                                                    <th>Subtotal</th>
-                                                     <th>Order Date</th>
-                                               
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-                                                {orderItems.order_items && orderItems.order_items.length > 0 ? (
-                                                    orderItems.order_items.map((orderItem, index) => (
-                                                        <tr key={orderItem.id}>
-                                                            <td>{index+1}</td>
-                                                        
-                                                            <td><img width={70} src={`${fileUrl}uploads/products/small/${orderItem.image}`} alt="" /> </td>
-                                                            <td>{orderItem.product_name}</td>
-                                                            <td>{orderItem.unit_price}</td>
-                                                            <td>{orderItem.qty}</td>
-                                                            <td>{orderItem.unit_price * orderItem.qty}</td>
-                                                            <td>
-                                                                {format(new Date(orderItem.created_at), "PPP")}
-                                                            </td>
-
-                                                   
-                                                            <td>
-                                                     
-                                                          
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                ) : (
+                                        <div className="table-responsive">
+                                            <table className="table table-striped">
+                                                <thead>
                                                     <tr>
-                                                        <td className='text-center py-5' colSpan="8">No Invoice Available</td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
+                                                        <th>Id</th>
+                                                        <th>Product Image</th>
+                                                        <th>Product Name</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Size</th>
+                                                        <th>Color</th>
+                                                        <th>Quantity</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Order Date</th>
 
-                                       
-                                        </table>
-                                          </div>
-                                       
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {orderItems.order_items && orderItems.order_items.length > 0 ? (
+                                                        orderItems.order_items.map((orderItem, index) => (
+                                                            <tr key={orderItem.id}>
+                                                                <td>{index + 1}</td>
+
+                                                                <td><img width={70} src={`${fileUrl}uploads/products/small/${orderItem.image}`} alt="" /> </td>
+                                                                <td>{orderItem.product_name}</td>
+                                                                <td>{orderItem.unit_price}</td>
+                                                                <td>{orderItem.size}</td>
+                                                                <td>{orderItem.color || '-'}</td>
+                                                                <td>{orderItem.qty}</td>
+                                                                <td>{orderItem.unit_price * orderItem.qty}</td>
+                                                                <td>
+                                                                    {format(new Date(orderItem.created_at), "PPP p")}
+                                                                </td>
+
+
+                                                                <td>
+
+
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    ) : (
+                                                        <tr>
+                                                            <td className='text-center py-5' colSpan="9">No Invoice Available</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+
+
+                                            </table>
+                                        </div>
+
                                     </div>
 
                                     <div className="row">
-                                    <div className="col-md-12 text-end">
-                                    <div className='me-3 mb-3'>
-                                        <h4>SubTotal: {orderItems.sub_total}</h4>
-                                        <h4>Delivery Fee: 60</h4>
-                                        <h4>Total: {orderItems.amount}</h4>
+                                        <div className="col-md-12 text-end">
+                                            <div className='me-3 mb-3'>
+                                                <h4>SubTotal: {orderItems.sub_total}</h4>
+                                                <h4>Delivery Fee: {orderItems.shipping_amount}</h4>
+                                                <h4>Total: {orderItems.amount}</h4>
+                                            </div>
+                                        </div>
                                     </div>
-                                    </div>
-                                  </div>
                                 </div>
                             </div>
                         </div>

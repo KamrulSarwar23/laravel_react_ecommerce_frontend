@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { apiUrl, customerToken, fileUrl } from './Http';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { loadStripe } from '@stripe/stripe-js';
 
 const Checkout = () => {
     const {
@@ -14,8 +15,12 @@ const Checkout = () => {
 
     const [paymentMethod, setPaymentMethod] = useState('cod');
     const [cartProducts, setCartProducts] = useState([]);
+    const [shippings, setShipping] = useState([]);
     const [subtotal, setSubTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
     const navigate = useNavigate();
+    const [selectShipping, setSelectShipping] = useState(null);
+
 
     // Fetch cart products
     const getCartProducts = async () => {
@@ -38,20 +43,93 @@ const Checkout = () => {
             });
     };
 
+    const getShipping = async () => {
+        const res = await fetch(`${apiUrl}get-shipping`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${customerToken()}`,
+            },
+        }).then((res) => res.json())
+            .then((result) => {
+                if (result.status === 200) {
+                    setShipping(result.data);
+                    console.log(result.data)
+                } else {
+                    console.log('Something went wrong');
+                }
+            });
+    };
+
     // Handle payment method selection
     const handlePaymentMethod = (e) => {
         setPaymentMethod(e.target.value);
     };
 
+    const shippingMethod = (e) => {
+        const selected = shippings.find(shipping => shipping.method === e.target.value);
+        setSelectShipping(selected);
+    };
+
     // Handle Cash on Delivery
     const cashOnDelivery = async (data) => {
+
+        if (selectShipping == null) {
+            setIsLoading(false);
+            toast.error('Select Shipping Method');
+        } else {
+            setIsLoading(true);
+
+            const payload = {
+                ...data,
+                payment_method: paymentMethod,
+                shipping_amount: selectShipping.amount,
+                shipping_method: selectShipping.method,
+            };
+
+            const res = await fetch(apiUrl + "pay-with-cash-on-delivery", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    Authorization: `Bearer ${customerToken()}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await res.json();
+
+            if (result.status === 200) {
+                toast.success(result.message);
+                getCartProducts();
+                navigate('/customer/order/list');
+            } else {
+                if (result.status === 400) {
+                    toast.error(result.errors.name[0]);
+                } else {
+                    toast.error(result.message || 'Something went wrong');
+                }
+            }
+            setIsLoading(false); // Set loading to false
+        }
+
+
+    };
+
+
+
+    const stripePayment = async (data) => {
+        setIsLoading(true);
+
+        const stripe = await loadStripe('pk_test_51OJbidEB4hM63P3ZjEWE3NMurrlB0gst4TUBk9q3GmXf98idAXVGHCe3Zybufud2Sr3T5IAzaSZ542ML9UYZUUw000XLl5AvLQ');
 
         const payload = {
             ...data,
             payment_method: paymentMethod,
         };
 
-        const res = await fetch(apiUrl + "pay-with-cash-on-delivery", {
+        const res = await fetch(apiUrl + "pay-with-stripe", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -64,22 +142,18 @@ const Checkout = () => {
         const result = await res.json();
 
         if (result.status === 200) {
-            toast.success(result.message);
-            getCartProducts();
-            navigate('/order/success');
-        } else {
-            if (result.status === 400) {
-                toast.error(result.errors.name[0]);
-            } else {
-                toast.error(result.message || 'Something went wrong');
-            }
-        }
-    };
+            const { error } = await stripe.redirectToCheckout({
+                sessionId: result.sessionId,
+            });
 
-    // Handle Stripe Payment
-    const stripePayment = async (data) => {
-        // Add Stripe payment logic here
-        toast.info('Stripe payment is not available now.');
+            if (error) {
+                console.error('Stripe Error:', error); // Debugging
+                toast.error(error.message);
+            }
+        } else {
+            toast.error(result.message || 'Something went wrong');
+        }
+        setIsLoading(false);
     };
 
     // Handle form submission
@@ -93,6 +167,7 @@ const Checkout = () => {
 
     useEffect(() => {
         getCartProducts();
+        getShipping();
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
@@ -100,6 +175,7 @@ const Checkout = () => {
     }, []);
 
     return (
+
         <div>
             <Layout>
                 <div className="container pb-5">
@@ -119,7 +195,7 @@ const Checkout = () => {
                         <div className="col-md-7">
                             <h3 className='border-bottom pb-2'><strong>Billing Details</strong></h3>
 
-                            <form onSubmit={handleSubmit(onSubmit)}>
+                            <form className='mt-4' onSubmit={handleSubmit(onSubmit)}>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <div className='mb-4'>
@@ -153,8 +229,6 @@ const Checkout = () => {
                                         </div>
                                     </div>
 
-                      
-
                                     <div className="col-md-6">
                                         <div className='mb-4'>
                                             <input
@@ -183,7 +257,6 @@ const Checkout = () => {
                                         </div>
                                     </div>
 
-
                                     <div className="mb-4">
                                         <textarea
                                             placeholder='Address'
@@ -198,9 +271,18 @@ const Checkout = () => {
                                 </div>
 
                                 <div className="d-flex mt-3">
-                                    <button type="submit" className='btn btn-primary'>
-                                        {paymentMethod === 'cod' ? 'Proceed With Cash On Delivery' : 'Proceed With Stripe'}
+                                    <button type="submit" className='btn btn-primary' disabled={isLoading}>
+                                        {isLoading ? (
+                                            <span>
+                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                Processing...
+                                            </span>
+                                        ) : (
+                                            paymentMethod === 'cod' ? 'Proceed With Cash On Delivery' : 'Proceed With Stripe'
+                                        )}
                                     </button>
+
+
                                 </div>
                             </form>
                         </div>
@@ -243,16 +325,35 @@ const Checkout = () => {
 
                                 <div className="d-flex mb-2 justify-content-between border-bottom">
                                     <div className='me-2'> <strong>Shipping:</strong> </div>
-                                    <div>৳60</div>
+                                    <div>৳ {selectShipping ? selectShipping.amount : '0'}</div>
                                 </div>
 
                                 <div className="d-flex justify-content-between border-bottom mb-4">
                                     <div className='me-2'> <strong>Grand Total:</strong> </div>
-                                    <div>৳{subtotal + 60}</div>
+                                    <div>৳ {subtotal + (selectShipping?.amount || 0)}</div>
                                 </div>
                             </div>
 
-                            <h3 className='border-bottom pb-3'><strong>Payment Methods</strong></h3>
+                            <h3 className='border-bottom pb-3'><strong>Shipping Methods</strong></h3>
+
+                            <div className='d-flex'>
+                                {shippings.map((shipping) => (
+                                    <div key={shipping.id} className='me-4'>
+                                        <input
+                                            id={`shipping-${shipping.id}`}
+                                            name="shipping"
+                                            checked={selectShipping?.method === shipping.method}
+                                            value={shipping.method}
+                                            className='me-1'
+                                            type="radio"
+                                            onChange={shippingMethod}
+                                        />
+                                        <label htmlFor={`shipping-${shipping.id}`}>{shipping.method}</label>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <h3 className='border-bottom pb-2 mt-3'><strong>Payment Methods</strong></h3>
 
                             <div className='d-flex'>
                                 <div className='me-4'>

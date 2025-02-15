@@ -47,8 +47,7 @@ const Cart = () => {
                     toast.success(result.message);
                     getCartProducts()
                     setSubTotal()
-                    window.location.reload();
-
+                    
                 } else {
                     console.log('Something went wrong');
                 }
@@ -234,23 +233,12 @@ const Cart = () => {
 
                 <div className="row justify-content-end py-3 pb-3">
                     <div className='col-md-3'>
-                        <div className="d-flex mb-2 justify-content-between border-bottom">
+                        <div className="d-flex mb-4 justify-content-between border-bottom">
                             <div className='me-2'> <strong>Sub Total:</strong> </div>
                             <div><span>৳</span>{subTotal}</div>
 
                         </div>
 
-                        <div className="d-flex mb-2 justify-content-between border-bottom">
-                            <div className='me-2'> <strong>Shipping:</strong> </div>
-                            <div><span>৳</span>60</div>
-
-                        </div>
-
-                        <div className="d-flex justify-content-between border-bottom mb-4">
-                            <div className='me-2'> <strong>Grand Total:</strong> </div>
-                            <div><span>৳</span>{subTotal + 60}</div>
-
-                        </div>
 
                         {
                             cartProducts.length > 0 && <div className="d-flex justify-content-end">

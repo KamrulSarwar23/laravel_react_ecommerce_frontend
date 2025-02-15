@@ -21,6 +21,11 @@ import CategoryCreate from './components/admin/category/Create'
 import CategoryUpdate from './components/admin/category/Update'
 
 
+import ShippingShow from './components/admin/shipping/Show'
+import ShippingCreate from './components/admin/shipping/Create'
+import ShippingUpdate from './components/admin/shipping/Update'
+
+
 import BrandShow from './components/admin/brand/Show'
 import BrandCreate from './components/admin/brand/Create'
 import BrandUpdate from './components/admin/brand/Update'
@@ -40,6 +45,9 @@ import TransactionList from './components/admin/TransactionList'
 import Invoice from './components/admin/Invoice'
 import CustomerOrderList from './components/Customer/OrderList'
 import CustomerInvoice from './components/Customer/Invoice'
+import StripeSuccess from './components/common/StripeSuccess'
+import StripeCancel from './components/common/StripeCancel'
+import ProductReview from './components/admin/ProductReview'
 
 function App() {
 
@@ -60,6 +68,8 @@ function App() {
 
           <Route path='/register' element={<Register />} />
 
+          <Route path="/checkout/success" element={<StripeSuccess />} />
+          <Route path="/checkout/cancel" element={<StripeCancel />} />
 
           <Route path='/customer/dashboard' element={
             <CustomerRequireAuth>
@@ -196,6 +206,32 @@ function App() {
           <Route path='/admin/invoice/:id' element={
             <AdminRequireAuth>
               <Invoice />
+            </AdminRequireAuth>
+          } />
+
+          <Route path='/admin/product/review' element={
+            <AdminRequireAuth>
+              <ProductReview />
+            </AdminRequireAuth>
+          } />
+
+
+          <Route path='/admin/shipping' element={
+            <AdminRequireAuth>
+              <ShippingShow />
+            </AdminRequireAuth>
+          } />
+
+          <Route path='/admin/shipping/create' element={
+            <AdminRequireAuth>
+              <ShippingCreate />
+            </AdminRequireAuth>
+          } />
+
+
+          <Route path='/admin/shipping/edit/:id' element={
+            <AdminRequireAuth>
+              <ShippingUpdate />
             </AdminRequireAuth>
           } />
 
