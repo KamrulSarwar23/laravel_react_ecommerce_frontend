@@ -115,7 +115,7 @@ const ProductReview = () => {
                                                         <th>Id</th>
                                                         <th>Comment</th>
                                                         <th>Rating</th>
-                                                        <th>Created At</th>
+                                                        <th>Review Date</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -129,7 +129,7 @@ const ProductReview = () => {
                                                                 <td>
 
                                                                     {[...Array(5)].map((_, i) => (
-                                                                        <span key={i} className={i < review.rating ? "text-warning" : "text-secondary"}>
+                                                                        <span key={i} className={i < review.rating ? "text-warning ratingStar" : "text-secondary ratingStar"}>
                                                                             ★
                                                                         </span>
                                                                     ))}

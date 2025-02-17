@@ -169,7 +169,7 @@ const Product = () => {
             if (result.status === 200) {
                 setCart(result.data);
                 toast.success(result.message);
-                navigate('/cart')
+                // navigate('/cart')
                 // Reset form
                 setSelectedSize("");
                 setSelectedColor("");

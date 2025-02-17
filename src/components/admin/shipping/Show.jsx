@@ -115,7 +115,7 @@ const Show = () => {
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Method</th>
+                                                        <th>Shipping Zone</th>
                                                         <th>Amount</th>
                                                         <th>Action</th>
                                                     </tr>

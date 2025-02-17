@@ -75,7 +75,7 @@ const Show = () => {
                         Name
                       </label>
                       <input
-                        placeholder="Method"
+                        placeholder="Shipping Zone"
                         {...register("method", {
                           required: "The method field is required",
                         })}

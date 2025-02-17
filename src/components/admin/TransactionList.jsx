@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Swal from "sweetalert2";
 import { format } from "date-fns";
 import Layout from '../common/Layout';
 import SideBar from '../common/SideBar';
@@ -38,46 +36,6 @@ const TransactionList = () => {
         }
     };
 
-    // Delete category
-    // const deleteUser = async (id) => {
-    //     Swal.fire({
-    //         title: "Are you sure?",
-    //         text: "You won't be able to revert this!",
-    //         icon: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#3085d6",
-    //         cancelButtonColor: "#d33",
-    //         confirmButtonText: "Yes, delete it!",
-    //     }).then(async (result) => {
-    //         if (result.isConfirmed) {
-    //             try {
-
-    //                 const res = await fetch(`${apiUrl}users/${id}`, {
-    //                     method: "DELETE",
-    //                     headers: {
-    //                         "Content-Type": "application/json",
-    //                         Accept: "application/json",
-    //                         Authorization: `Bearer ${token()}`,
-    //                     },
-    //                 });
-
-    //                 const result = await res.json();
-
-    //                 if (result.status === 200) {
-    //                     setUsers(users.filter((user) => user.id !== id));
-
-    //                     Swal.fire("Deleted!", result.message, "success");
-    //                 } else if(result.status === 400){
-    //                     Swal.fire("Error!", result.message, "error");
-    //                 }else {
-    //                     Swal.fire("Error", result.message, "error");
-    //                 }
-    //             } catch (error) {
-    //                 Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
-    //             }
-    //         }
-    //     });
-    // };
 
     useEffect(() => {
         fetchOrders();
@@ -98,12 +56,7 @@ const TransactionList = () => {
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
                                             <h4 className="h5">Transaction List</h4>
-                                            {/* <Link
-                                                className="btn btn-primary"
-                                                to={"/admin/categories/create"}
-                                            >
-                                                Create
-                                            </Link> */}
+
                                         </div>
 
                                         <hr />
@@ -117,6 +70,7 @@ const TransactionList = () => {
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
+                                                        <th>Invoice Id</th>
                                                         <th>Transaction Id</th>
                                                         <th>Payment Method</th>
                                                         <th>Payment Status</th>
@@ -130,9 +84,10 @@ const TransactionList = () => {
                                                         transactions.map((transaction, index) => (
                                                             <tr key={transaction.id}>
                                                                 <td>{index + 1}</td>
+                                                                <td>{transaction.order.invoice_id}</td>
                                                                 <td>{transaction.transaction_id}</td>
 
-                                                                <td>{transaction.payment_method}</td>
+                                                                <td>{transaction.payment_method == 'cod' ? 'Cash On Delivery' : 'Stripe Payment'}</td>
 
                                                                 {
                                                                     transaction.payment_status == 0 && <td>Pending</td>
@@ -142,11 +97,11 @@ const TransactionList = () => {
                                                                     transaction.payment_status == 1 && <td>Paid</td>
                                                                 }
 
-                                                                <td>{transaction.amount}</td>
+                                                                <td>৳{transaction.amount}</td>
 
 
                                                                 <td>
-                                                                {format(new Date(transaction.created_at), "PPP p")}
+                                                                    {format(new Date(transaction.created_at), "PPP p")}
                                                                 </td>
                                                                 <td>
 
@@ -156,7 +111,7 @@ const TransactionList = () => {
                                                         ))
                                                     ) : (
                                                         <tr>
-                                                            <td className='text-center py-5' colSpan="6">No Transactions Available</td>
+                                                            <td className='text-center py-5' colSpan="7">No Transactions Available</td>
                                                         </tr>
                                                     )}
                                                 </tbody>

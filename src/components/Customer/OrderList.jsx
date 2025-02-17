@@ -101,12 +101,7 @@ const OrderList = () => {
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
                                             <h4 className="h5">Order List</h4>
-                                            {/* <Link
-                                                className="btn btn-primary"
-                                                to={"/admin/categories/create"}
-                                            >
-                                                Create
-                                            </Link> */}
+                                    
                                         </div>
 
                                         <hr />
@@ -122,9 +117,7 @@ const OrderList = () => {
                                                         <th>Id</th>
                                                         <th>Invoice Id</th>
                                                         <th>Product Quantity</th>
-                                                        <th>Sub Total</th>
                                                         <th>Total</th>
-                                                        <th>Payment Method</th>
                                                         <th>Payment Status</th>
                                                         <th>Order Status</th>
                                                         <th>Order Date</th>
@@ -138,18 +131,14 @@ const OrderList = () => {
                                                             <tr key={order.id}>
                                                                 <td>{index + 1}</td>
                                                                 <td>{order.invoice_id}</td>
-                                                                <td>{order.product_qty}</td>
-                                                                <td>{order.sub_total}</td>
-                                                                <td>{order.amount}</td>
+
+                                                                <td className='text-center'>{order.product_qty}</td>
 
 
-                                                                {
-                                                                    order.payment_method == 'cod' && <td>Cash on Delivery</td>
-                                                                }
 
-                                                                {
-                                                                    order.payment_method == 'stripe' && <td>Pay With Stripe</td>
-                                                                }
+
+                                                                <td>৳{order.amount}</td>
+
 
                                                                 {
                                                                     order.payment_status == 0 && <td>Pending</td>
@@ -158,7 +147,8 @@ const OrderList = () => {
                                                                 {
                                                                     order.payment_status == 1 && <td>Paid</td>
                                                                 }
-                                                                <td>{order.order_status}</td>
+
+                                                                <td>{order.order_status == 'pending' ? 'Pending' : 'Delivered'}</td>
 
                                                                 <td>
                                                                     {format(new Date(order.created_at), "PPP p")}
@@ -175,7 +165,7 @@ const OrderList = () => {
                                                         ))
                                                     ) : (
                                                         <tr>
-                                                            <td className='text-center py-5' colSpan="10">No Orders Available</td>
+                                                            <td className='text-center py-5' colSpan="12">No Orders Available</td>
                                                         </tr>
                                                     )}
                                                 </tbody>

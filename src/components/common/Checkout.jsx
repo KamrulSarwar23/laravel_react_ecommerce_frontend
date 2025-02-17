@@ -120,40 +120,47 @@ const Checkout = () => {
 
 
     const stripePayment = async (data) => {
-        setIsLoading(true);
 
-        const stripe = await loadStripe('pk_test_51OJbidEB4hM63P3ZjEWE3NMurrlB0gst4TUBk9q3GmXf98idAXVGHCe3Zybufud2Sr3T5IAzaSZ542ML9UYZUUw000XLl5AvLQ');
+        if (selectShipping == null) {
+            setIsLoading(false);
+            toast.error('Select Shipping Method');
+        } else {
+            setIsLoading(true);
 
-        const payload = {
-            ...data,
-            payment_method: paymentMethod,
-        };
+            const stripe = await loadStripe('pk_test_51OJbidEB4hM63P3ZjEWE3NMurrlB0gst4TUBk9q3GmXf98idAXVGHCe3Zybufud2Sr3T5IAzaSZ542ML9UYZUUw000XLl5AvLQ');
 
-        const res = await fetch(apiUrl + "pay-with-stripe", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: `Bearer ${customerToken()}`,
-            },
-            body: JSON.stringify(payload),
-        });
+            const payload = {
+                ...data,
+                payment_method: paymentMethod,
+            };
 
-        const result = await res.json();
-
-        if (result.status === 200) {
-            const { error } = await stripe.redirectToCheckout({
-                sessionId: result.sessionId,
+            const res = await fetch(apiUrl + "pay-with-stripe", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    Authorization: `Bearer ${customerToken()}`,
+                },
+                body: JSON.stringify(payload),
             });
 
-            if (error) {
-                console.error('Stripe Error:', error); // Debugging
-                toast.error(error.message);
+            const result = await res.json();
+
+            if (result.status === 200) {
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: result.sessionId,
+                });
+
+                if (error) {
+                    console.error('Stripe Error:', error); // Debugging
+                    toast.error(error.message);
+                }
+            } else {
+                toast.error(result.message || 'Something went wrong');
             }
-        } else {
-            toast.error(result.message || 'Something went wrong');
+            setIsLoading(false);
         }
-        setIsLoading(false);
+
     };
 
     // Handle form submission
@@ -277,8 +284,8 @@ const Checkout = () => {
                                                 <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                 Processing...
                                             </span>
-                                        ) : (
-                                            paymentMethod === 'cod' ? 'Proceed With Cash On Delivery' : 'Proceed With Stripe'
+                                        ) : (   
+                                            paymentMethod === 'cod' ? 'Proceed With Cash On Delivery' : 'Proceed With sslCommerz'
                                         )}
                                     </button>
 
@@ -305,9 +312,11 @@ const Checkout = () => {
                                                     <div>{product.name}</div>
                                                     <div className="d-flex align-items-center">
                                                         <button className='btn btn-size'>{product.size}</button>
-                                                        <span className='me-3'>{product.color}</span>
-                                                        <div className='pe-2'>{product.quantity} Pcs</div>
-                                                        <span><span>৳</span>{product.price}</span>
+                                                        <span className='me-3 btn btn-size'>{product.color}</span>
+                                                        <span className='me-2'> ৳{product.price}</span>
+                                                        <div className='pe-2'> ({product.quantity} Pcs)</div>
+                                                        <span> ৳{parseFloat(product.price * product.quantity)}</span>
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -334,7 +343,7 @@ const Checkout = () => {
                                 </div>
                             </div>
 
-                            <h3 className='border-bottom pb-3'><strong>Shipping Methods</strong></h3>
+                            <h3 className='border-bottom pb-3'><strong>Shipping Zone</strong></h3>
 
                             <div className='d-flex'>
                                 {shippings.map((shipping) => (
@@ -348,12 +357,12 @@ const Checkout = () => {
                                             type="radio"
                                             onChange={shippingMethod}
                                         />
-                                        <label htmlFor={`shipping-${shipping.id}`}>{shipping.method}</label>
+                                        <label htmlFor={`shipping-${shipping.id}`}>{shipping.method} (৳{shipping.amount})</label>
                                     </div>
                                 ))}
                             </div>
 
-                            <h3 className='border-bottom pb-2 mt-3'><strong>Payment Methods</strong></h3>
+                            <h3 className='border-bottom pb-2 mt-3'><strong>Payment Method</strong></h3>
 
                             <div className='d-flex'>
                                 <div className='me-4'>
@@ -365,7 +374,7 @@ const Checkout = () => {
                                         className='me-1'
                                         type="radio"
                                     />
-                                    <label htmlFor="stripe">Stripe</label>
+                                    <label htmlFor="stripe">sslCommerz</label>
                                 </div>
 
                                 <div>

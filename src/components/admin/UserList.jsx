@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Swal from "sweetalert2";
 import { format } from "date-fns";
 import Layout from '../common/Layout';
 import SideBar from '../common/SideBar';
@@ -38,46 +36,6 @@ const UserList = () => {
         }
     };
 
-    // Delete category
-    const deleteUser = async (id) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-
-                    const res = await fetch(`${apiUrl}users/${id}`, {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Accept: "application/json",
-                            Authorization: `Bearer ${token()}`,
-                        },
-                    });
-
-                    const result = await res.json();
-
-                    if (result.status === 200) {
-                        setUsers(users.filter((user) => user.id !== id));
-
-                        Swal.fire("Deleted!", result.message, "success");
-                    } else if (result.status === 400) {
-                        Swal.fire("Error!", result.message, "error");
-                    } else {
-                        Swal.fire("Error", result.message, "error");
-                    }
-                } catch (error) {
-                    Swal.fire("Error", "Failed to delete the category. Please try again.", "error");
-                }
-            }
-        });
-    };
 
     useEffect(() => {
         fetchUsers();
@@ -98,12 +56,7 @@ const UserList = () => {
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
                                             <h4 className="h5">Users List</h4>
-                                            <Link
-                                                className="btn btn-primary"
-                                                to={"/admin/categories/create"}
-                                            >
-                                                Create
-                                            </Link>
+                                     
                                         </div>
 
                                         <hr />

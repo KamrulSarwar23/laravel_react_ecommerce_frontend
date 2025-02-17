@@ -45,8 +45,6 @@ import TransactionList from './components/admin/TransactionList'
 import Invoice from './components/admin/Invoice'
 import CustomerOrderList from './components/Customer/OrderList'
 import CustomerInvoice from './components/Customer/Invoice'
-import StripeSuccess from './components/common/StripeSuccess'
-import StripeCancel from './components/common/StripeCancel'
 import ProductReview from './components/admin/ProductReview'
 
 function App() {
@@ -67,9 +65,6 @@ function App() {
           <Route path='/login' element={<CustomerLogin />} />
 
           <Route path='/register' element={<Register />} />
-
-          <Route path="/checkout/success" element={<StripeSuccess />} />
-          <Route path="/checkout/cancel" element={<StripeCancel />} />
 
           <Route path='/customer/dashboard' element={
             <CustomerRequireAuth>

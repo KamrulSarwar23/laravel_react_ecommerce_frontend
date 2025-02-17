@@ -11,6 +11,7 @@ const Invoice = () => {
     const params = useParams();
     const [orderItems, setOrderItems] = useState([]);
     const [loader, setLoader] = useState(false);
+   const [shippingAddress, setShippingAddress] = useState('');
 
     // Fetch categories from API
     const fetchOrderItems = async () => {
@@ -30,7 +31,7 @@ const Invoice = () => {
             if (result.status == 200) {
                 setLoader(false)
                 setOrderItems(result.data);
-                console.log(result.data)
+                 setShippingAddress(result.data.shipping_address)
 
             } else {
                 setLoader(false)
@@ -70,6 +71,29 @@ const Invoice = () => {
                                             loader == true && <Loader />
                                         }
 
+                                        <div className='row py-4'>
+
+                                            <div className='col-md-6'>
+                                                <h4>Customer Name: {shippingAddress.name}</h4>
+                                                <h4>Customer Email: {shippingAddress.email}</h4>
+                                                <h4>Customer Phone: {shippingAddress.phone}</h4>
+                                                <h4>Customer City: {shippingAddress.city}</h4>
+                                                <h4>Shipping Address: {shippingAddress.address}</h4>
+                                            </div>
+
+                                            <div className='col-md-6 text-end'>
+
+
+                                                <h4>Shipping Zone: {orderItems.shipping_method}</h4>
+                                                <h4>Shipping Cost: ৳{orderItems.shipping_amount}</h4>
+                                                <h4>Payment Method: {orderItems.payment_method == 'cod' ? 'Cash On Delivery' : 'Stripe Payment' }</h4>
+                                                <h4>Payment Status: {orderItems.payment_status == 0 ? 'Pending' : 'Paid'}</h4>
+                                                <h4>Order Status: {orderItems.order_status == 'pending' ? 'Pending' : 'Delivered'}</h4>
+                                            </div>
+                                        </div>
+
+
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -77,9 +101,9 @@ const Invoice = () => {
                                                         <th>Id</th>
                                                         <th>Product Image</th>
                                                         <th>Product Name</th>
-                                                        <th>Unit Price</th>
                                                         <th>Size</th>
                                                         <th>Color</th>
+                                                        <th>Unit Price</th>
                                                         <th>Quantity</th>
                                                         <th>Subtotal</th>
                                                         <th>Order Date</th>
@@ -94,11 +118,11 @@ const Invoice = () => {
                                                                 <td>{index + 1}</td>
                                                                 <td><img width={70} src={`${fileUrl}uploads/products/small/${orderItem.image}`} alt="" /> </td>
                                                                 <td>{orderItem.product_name}</td>
-                                                                <td>{orderItem.unit_price}</td>
                                                                 <td>{orderItem.size}</td>
                                                                 <td>{orderItem.color || '-'}</td>
+                                                                <td>৳{orderItem.unit_price}</td>
                                                                 <td>{orderItem.qty}</td>
-                                                                <td>{orderItem.unit_price * orderItem.qty}</td>
+                                                                <td>৳{orderItem.unit_price * orderItem.qty}</td>
                                                                 <td>
                                                                     {format(new Date(orderItem.created_at), "PPP p")}
                                                                 </td>
@@ -122,12 +146,13 @@ const Invoice = () => {
                                         </div>
 
                                     </div>
+
                                     <div className="row">
                                         <div className="col-md-12 text-end">
                                             <div className='me-3 mb-3'>
-                                                <h4>SubTotal: {orderItems.sub_total}</h4>
-                                                <h4>Delivery Fee: {orderItems.shipping_amount}</h4>
-                                                <h4>Total: {orderItems.amount}</h4>
+                                                <h4>SubTotal: ৳{orderItems.sub_total}</h4>
+                                                <h4>Delivery Fee: ৳{orderItems.shipping_amount}</h4>
+                                                <h4>Total: ৳{orderItems.amount}</h4>
                                             </div>
                                         </div>
                                     </div>
