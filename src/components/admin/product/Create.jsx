@@ -127,10 +127,6 @@ const Create = () => {
       navigate("/admin/products");
     } else {
 
-      // Object.keys(formErrors).forEach((field) => {
-      //     setError(field, {message: formErrors[field[0]]});
-      // })
-
       if (result.status == 400) {
         toast.error(result.errors.sku[0]);
         setIsDisable(false);
@@ -340,7 +336,7 @@ const Create = () => {
 
                         <div className="mb-3">
                           <label htmlFor="price" className="form-label">
-                            Price
+                            Offer Price (৳)
                           </label>
                           <input
                             placeholder="Price"
@@ -366,7 +362,7 @@ const Create = () => {
 
                         <div className="mb-3">
                           <label htmlFor="compare_price" className="form-label">
-                            Compare Price
+                            Regular Price (৳)
                           </label>
                           <input
                             placeholder="Compare Price"

@@ -432,7 +432,7 @@ const Update = () => {
 
                         <div className="mb-3">
                           <label htmlFor="price" className="form-label">
-                            Price
+                          Offer Price (৳)
                           </label>
                           <input
                             placeholder="Price"
@@ -458,7 +458,7 @@ const Update = () => {
 
                         <div className="mb-3">
                           <label htmlFor="compare_price" className="form-label">
-                            Compare Price
+                          Regular Price (৳)
                           </label>
                           <input
                             placeholder="Compare Price"

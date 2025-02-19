@@ -39,7 +39,6 @@ import CustomerProfile from './components/Customer/Profile'
 import CategoryProduct from './components/common/CategoryProduct'
 
 import UserList from './components/admin/UserList'
-import PaymentSuccess from './components/common/PaymentSuccess'
 import OrderList from './components/admin/OrderList'
 import TransactionList from './components/admin/TransactionList'
 import Invoice from './components/admin/Invoice'
@@ -72,12 +71,6 @@ function App() {
             </CustomerRequireAuth>
           } />
 
-
-          <Route path='/order/success' element={
-            <CustomerRequireAuth>
-              <PaymentSuccess />
-            </CustomerRequireAuth>
-          } />
 
           <Route path='/customer/order/list' element={
             <CustomerRequireAuth>

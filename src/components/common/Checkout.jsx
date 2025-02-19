@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { apiUrl, customerToken, fileUrl } from './Http';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { loadStripe } from '@stripe/stripe-js';
 
 const Checkout = () => {
     const {
@@ -55,7 +54,6 @@ const Checkout = () => {
             .then((result) => {
                 if (result.status === 200) {
                     setShipping(result.data);
-                    console.log(result.data)
                 } else {
                     console.log('Something went wrong');
                 }
@@ -114,51 +112,16 @@ const Checkout = () => {
             setIsLoading(false); // Set loading to false
         }
 
-
     };
 
 
-
-    const stripePayment = async (data) => {
+    const sslCommerzPaymemt = async () => {
 
         if (selectShipping == null) {
             setIsLoading(false);
             toast.error('Select Shipping Method');
         } else {
-            setIsLoading(true);
-
-            const stripe = await loadStripe('pk_test_51OJbidEB4hM63P3ZjEWE3NMurrlB0gst4TUBk9q3GmXf98idAXVGHCe3Zybufud2Sr3T5IAzaSZ542ML9UYZUUw000XLl5AvLQ');
-
-            const payload = {
-                ...data,
-                payment_method: paymentMethod,
-            };
-
-            const res = await fetch(apiUrl + "pay-with-stripe", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    Authorization: `Bearer ${customerToken()}`,
-                },
-                body: JSON.stringify(payload),
-            });
-
-            const result = await res.json();
-
-            if (result.status === 200) {
-                const { error } = await stripe.redirectToCheckout({
-                    sessionId: result.sessionId,
-                });
-
-                if (error) {
-                    console.error('Stripe Error:', error); // Debugging
-                    toast.error(error.message);
-                }
-            } else {
-                toast.error(result.message || 'Something went wrong');
-            }
-            setIsLoading(false);
+            toast.error('SSLCommerz Not Available at this Momemt! Please use Cash on Delivery. Thank You!');
         }
 
     };
@@ -168,7 +131,7 @@ const Checkout = () => {
         if (paymentMethod === 'cod') {
             cashOnDelivery(data);
         } else if (paymentMethod === 'stripe') {
-            stripePayment(data);
+            sslCommerzPaymemt(data);
         }
     };
 
@@ -277,6 +240,11 @@ const Checkout = () => {
                                     </div>
                                 </div>
 
+
+                                {
+                                    paymentMethod !== 'cod' && <span className='text-danger'>SSLCommerz Not Available at this Momemt! Please use Cash on Delivery. Thank You!</span>
+                                }
+
                                 <div className="d-flex mt-3">
                                     <button type="submit" className='btn btn-primary' disabled={isLoading}>
                                         {isLoading ? (
@@ -284,10 +252,11 @@ const Checkout = () => {
                                                 <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                 Processing...
                                             </span>
-                                        ) : (   
+                                        ) : (
                                             paymentMethod === 'cod' ? 'Proceed With Cash On Delivery' : 'Proceed With sslCommerz'
                                         )}
                                     </button>
+
 
 
                                 </div>
