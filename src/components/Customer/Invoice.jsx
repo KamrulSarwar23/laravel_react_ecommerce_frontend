@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { format } from "date-fns";
 import Layout from '../common/Layout';
@@ -6,12 +6,16 @@ import Loader from '../common/Loader';
 import { useParams } from 'react-router-dom';
 import { apiUrl, customerToken, fileUrl } from "../common/Http";
 import SideBar from './SideBar';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
+
 const Invoice = () => {
 
     const params = useParams();
     const [orderItems, setOrderItems] = useState([]);
     const [loader, setLoader] = useState(false);
-   const [shippingAddress, setShippingAddress] = useState('');
+    const [shippingAddress, setShippingAddress] = useState('');
 
     // Fetch categories from API
     const fetchOrderItems = async () => {
@@ -31,7 +35,7 @@ const Invoice = () => {
             if (result.status == 200) {
                 setLoader(false)
                 setOrderItems(result.data);
-                 setShippingAddress(result.data.shipping_address)
+                setShippingAddress(result.data.shipping_address)
 
             } else {
                 setLoader(false)
@@ -42,6 +46,21 @@ const Invoice = () => {
         }
     };
 
+    const invoiceRef = useRef(); // Ref for printing
+
+
+    const handleDownloadPDF = () => {
+        const input = invoiceRef.current;
+        html2canvas(input, { useCORS: true }).then((canvas) => {
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jsPDF("p", "mm", "a4");
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`Invoice_${orderItems.invoice_id}.pdf`);
+        });
+    };
+    
 
     useEffect(() => {
         fetchOrderItems();
@@ -57,8 +76,16 @@ const Invoice = () => {
                                 <SideBar />
                             </div>
 
+
                             <div className="col-md-9">
-                                <div className="card shadow border-0">
+
+                                <div className="d-flex justify-content-end mb-3">
+                                   
+                                    <button onClick={handleDownloadPDF} className="text-white btn btn-info">
+                                        Download Invoice
+                                    </button>
+                                </div>
+                                <div className="card shadow border-0" ref={invoiceRef}>
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between">
                                             <h4 className="h5">Order Items</h4>
@@ -86,7 +113,7 @@ const Invoice = () => {
 
                                                 <h4>Shipping Zone: {orderItems.shipping_method}</h4>
                                                 <h4>Shipping Cost: ৳{orderItems.shipping_amount}</h4>
-                                                <h4>Payment Method: {orderItems.payment_method == 'cod' ? 'Cash On Delivery' : 'Stripe Payment' }</h4>
+                                                <h4>Payment Method: {orderItems.payment_method == 'cod' ? 'Cash On Delivery' : 'Stripe Payment'}</h4>
                                                 <h4>Payment Status: {orderItems.payment_status == 0 ? 'Pending' : 'Paid'}</h4>
                                                 <h4>Order Status: {orderItems.order_status == 'pending' ? 'Pending' : 'Delivered'}</h4>
                                             </div>
